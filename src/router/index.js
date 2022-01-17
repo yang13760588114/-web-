@@ -48,7 +48,7 @@ export const constantRoutes = [
       path: 'user',
       name: 'User',
       component: () => import('@/views/user/index'),
-      meta: { title: '用户信息', icon: 'dashboard' }
+      meta: { title: '用户信息', icon: 'el-icon-user' }
     }]
   },
   {
@@ -56,19 +56,19 @@ export const constantRoutes = [
     component: Layout,
     redirect: '/fish/node',
     name: 'FishNode',
-    meta: { title: '鱼缸信息', icon: 'el-icon-s-help' },
+    meta: { title: '鱼缸信息', icon: 'el-icon-wallet' },
     children: [
       {
         path: '/fish/node',
         name: 'FishNode',
         component: () => import('@/views/fish/index'),
-        meta: { title: '鱼缸信息', icon: 'tree' }
+        meta: { title: '鱼缸信息', icon: 'el-icon-takeaway-box' }
       },
       {
         path: '/fish/info',
         name: 'FishInfo',
         component: () => import('@/views/fish/index'),
-        meta: { title: '养鱼信息', icon: 'tree' }
+        meta: { title: '养鱼信息', icon: 'el-icon-view' }
       }
     ]
   },
@@ -80,7 +80,7 @@ export const constantRoutes = [
         path: '/record/history',
         name: 'Record',
         component: () => import('@/views/record/index'),
-        meta: { title: '监控记录', icon: 'form' }
+        meta: { title: '监控记录', icon: 'el-icon-s-management' }
       }
     ]
   },
@@ -95,13 +95,13 @@ export const constantRoutes = [
         path: '/command/history',
         component: () => import('@/views/command/history/index'),
         name: 'CommandRecord',
-        meta: { title: '历史命令' }
+        meta: { title: '历史命令', icon: 'el-icon-s-unfold' }
       },
       {
         path: '/command/send',
         component: () => import('@/views/command/detail/index'),
         name: 'CommandSend',
-        meta: { title: '发送命令' }
+        meta: { title: '发送命令', icon: 'el-icon-phone-outline' }
       }
     ]
   },
