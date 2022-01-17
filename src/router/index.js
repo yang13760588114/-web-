@@ -80,7 +80,7 @@ export const constantRoutes = [
         path: '/record/history',
         name: 'Record',
         component: () => import('@/views/record/index'),
-        meta: { title: '历史记录', icon: 'form' }
+        meta: { title: '监控记录', icon: 'form' }
       }
     ]
   },
