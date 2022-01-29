@@ -1,9 +1,9 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from "vue";
+import Router from "vue-router";
 
-Vue.use(Router)
+Vue.use(Router);
 
-import Layout from '@/layout'
+import Layout from "@/layout";
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -31,96 +31,97 @@ import Layout from '@/layout'
  */
 export const constantRoutes = [
   {
-    path: '/login',
-    component: () => import('@/views/login/index'),
-    hidden: true
+    path: "/login",
+    component: () => import("@/views/login/index"),
+    hidden: true,
   },
   {
-    path: '/404',
-    component: () => import('@/views/404'),
-    hidden: true
+    path: "/404",
+    component: () => import("@/views/404"),
+    hidden: true,
   },
   {
-    path: '/',
+    path: "/",
     component: Layout,
-    redirect: '/user',
-    children: [{
-      path: 'user',
-      name: 'User',
-      component: () => import('@/views/user/index'),
-      meta: { title: '用户信息', icon: 'el-icon-user' }
-    }]
-  },
-  {
-    path: '/fish',
-    component: Layout,
-    redirect: '/fish/node',
-    name: 'FishNode',
-    meta: { title: '鱼缸信息', icon: 'el-icon-wallet' },
+    redirect: "/user",
     children: [
       {
-        path: '/fish/node',
-        name: 'FishNode',
-        component: () => import('@/views/fish/index'),
-        meta: { title: '鱼缸信息', icon: 'el-icon-takeaway-box' }
+        path: "user",
+        name: "User",
+        component: () => import("@/views/user/index"),
+        meta: { title: "用户信息", icon: "el-icon-user" },
+      },
+    ],
+  },
+  {
+    path: "/fish",
+    component: Layout,
+    redirect: "/fish/node",
+    children: [
+      {
+        path: "/fish/node",
+        name: "FishNode",
+        component: () => import("@/views/fishNode/index"),
+        meta: { title: "鱼缸信息", icon: "el-icon-takeaway-box" },
       },
       {
-        path: '/fish/info',
-        name: 'FishInfo',
-        component: () => import('@/views/fish/index'),
-        meta: { title: '养鱼信息', icon: 'el-icon-view' }
-      }
-    ]
+        path: "/fish/info",
+        name: "FishInfo",
+        component: () => import("@/views/fish/index"),
+        meta: { title: "养鱼信息", icon: "el-icon-view" },
+      },
+    ],
   },
   {
-    path: '/record',
+    path: "/record",
     component: Layout,
     children: [
       {
-        path: '/record/history',
-        name: 'Record',
-        component: () => import('@/views/record/index'),
-        meta: { title: '监控记录', icon: 'el-icon-s-management' }
-      }
-    ]
+        path: "/record/history",
+        name: "Record",
+        component: () => import("@/views/record/index"),
+        meta: { title: "监控记录", icon: "el-icon-s-management" },
+      },
+    ],
   },
   {
-    path: '/command',
+    path: "/command",
     component: Layout,
-    redirect: '/command/history',
-    name: 'Command',
-    meta: { title: '控制命令', icon: 'nested' },
+    redirect: "/command/history",
+    name: "Command",
+    meta: { title: "控制命令", icon: "nested" },
     children: [
       {
-        path: '/command/history',
-        component: () => import('@/views/command/history/index'),
-        name: 'CommandRecord',
-        meta: { title: '历史命令', icon: 'el-icon-s-unfold' }
+        path: "/command/history",
+        component: () => import("@/views/command/history/index"),
+        name: "CommandRecord",
+        meta: { title: "历史命令", icon: "el-icon-s-unfold" },
       },
       {
-        path: '/command/send',
-        component: () => import('@/views/command/detail/index'),
-        name: 'CommandSend',
-        meta: { title: '发送命令', icon: 'el-icon-phone-outline' }
-      }
-    ]
+        path: "/command/send",
+        component: () => import("@/views/command/detail/index"),
+        name: "CommandSend",
+        meta: { title: "发送命令", icon: "el-icon-phone-outline" },
+      },
+    ],
   },
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
-]
+  { path: "*", redirect: "/404", hidden: true },
+];
 
-const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
-})
+const createRouter = () =>
+  new Router({
+    // mode: 'history', // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes,
+  });
 
-const router = createRouter()
+const router = createRouter();
 
 // Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
-  const newRouter = createRouter()
-  router.matcher = newRouter.matcher // reset router
+  const newRouter = createRouter();
+  router.matcher = newRouter.matcher; // reset router
 }
 
-export default router
+export default router;
