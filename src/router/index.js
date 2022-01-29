@@ -57,6 +57,7 @@ export const constantRoutes = [
     path: "/fish",
     component: Layout,
     redirect: "/fish/node",
+    meta: { title: "鱼缸信息", icon: "el-icon-wallet" },
     children: [
       {
         path: "/fish/node",
@@ -67,7 +68,7 @@ export const constantRoutes = [
       {
         path: "/fish/info",
         name: "FishInfo",
-        component: () => import("@/views/fish/index"),
+        component: () => import("@/views/fishInfo/index"),
         meta: { title: "养鱼信息", icon: "el-icon-view" },
       },
     ],
