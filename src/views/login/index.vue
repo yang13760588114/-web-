@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import login from "@/api/user";
+import { login } from "@/api/user";
 
 export default {
   name: "Login",
@@ -121,13 +121,14 @@ export default {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true;
-          this.$store
-            .dispatch("/login", this.loginForm)
+          login(this.loginForm)
             .then(() => {
+              console.log("登陆成功");
               this.$router.push({ path: this.redirect || "/" });
               this.loading = false;
             })
             .catch(() => {
+              console.log("登陆失败");
               this.loading = false;
             });
         } else {
