@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { validaccount } from "@/utils/validate";
+import login from "@/api/user";
 
 export default {
   name: "Login",
@@ -81,8 +81,8 @@ export default {
     };
     return {
       loginForm: {
-        account: "",
-        password: "",
+        account: "admin",
+        password: "123456",
       },
       loginRules: {
         account: [
