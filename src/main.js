@@ -15,17 +15,12 @@ import router from "./router";
 import "@/icons"; // icon
 import "@/permission"; // permission control
 
-import axios from "axios";
-
 if (process.env.NODE_ENV === "production") {
   const { mockXHR } = require("../mock");
   mockXHR();
 }
 
 Vue.use(ElementUI, { locale });
-Vue.prototype.$axios = axios;
-// 取消一些警告
-Vue.Vue.config.productionTip = false;
 
 new Vue({
   el: "#app",
