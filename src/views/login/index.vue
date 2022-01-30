@@ -61,6 +61,7 @@
 
 <script>
 import { login } from "@/api/user";
+import router from "@/router";
 
 export default {
   name: "Login",
@@ -123,7 +124,7 @@ export default {
           login(this.loginForm)
             .then(() => {
               console.log("登陆成功");
-              this.$router.push("/fish");
+              router.push("/fish");
               this.loading = false;
             })
             .catch(() => {
