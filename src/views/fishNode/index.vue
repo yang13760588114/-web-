@@ -21,9 +21,25 @@
 </template>
 
 <script>
-import listFishNode from "@/api/fish";
+import { listFishNode } from "@/api/fish";
 
-export default {};
+export default {
+  data() {
+    return {
+      list: null,
+    };
+  },
+  created() {
+    this.listNodes();
+  },
+  methods: {
+    listNodes() {
+      listFishNode().then((res) => {
+        console.log(res.msg);
+      });
+    },
+  },
+};
 </script>
 
 <style scoped>
