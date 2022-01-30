@@ -94,7 +94,6 @@ export default {
       },
       loading: false,
       passwordType: "password",
-      redirect: undefined,
     };
   },
   watch: {
@@ -124,11 +123,10 @@ export default {
           login(this.loginForm)
             .then(() => {
               console.log("登陆成功");
-              this.$router.push({ path: this.redirect || "/" });
+              this.$router.push("/fish");
               this.loading = false;
             })
             .catch(() => {
-              console.log("登陆失败");
               this.loading = false;
             });
         } else {
