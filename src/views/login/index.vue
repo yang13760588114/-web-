@@ -11,15 +11,15 @@
       <div class="title-container">
         <h3 class="title">智能商用鱼缸远程监测和控制软件设计</h3>
       </div>
-      <el-form-item prop="username">
+      <el-form-item prop="account">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
         <el-input
-          ref="username"
-          v-model="loginForm.username"
-          placeholder="Username(admin)"
-          name="username"
+          ref="account"
+          v-model="loginForm.account"
+          placeholder="account(admin)"
+          name="account"
           type="text"
           tabindex="1"
         />
@@ -52,21 +52,22 @@
         type="primary"
         style="width: 100%; margin-bottom: 30px"
         @click.native.prevent="handleLogin"
-        >Login</el-button
       >
+        Login
+      </el-button>
     </el-form>
   </div>
 </template>
 
 <script>
-import { validUsername } from "@/utils/validate";
+import { validaccount } from "@/utils/validate";
 
 export default {
   name: "Login",
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
-        callback(new Error("请输入正确的用户名"));
+    const validateAccount = (rule, value, callback) => {
+      if (value.length < 1) {
+        callback(new Error("账户名不能为空"));
       } else {
         callback();
       }
@@ -80,12 +81,12 @@ export default {
     };
     return {
       loginForm: {
-        username: "",
+        account: "",
         password: "",
       },
       loginRules: {
-        username: [
-          { required: true, trigger: "blur", validator: validateUsername },
+        account: [
+          { required: true, trigger: "blur", validator: validateAccount },
         ],
         password: [
           { required: true, trigger: "blur", validator: validatePassword },
@@ -105,6 +106,7 @@ export default {
     },
   },
   methods: {
+    // 设置密码旁边的图标
     showPwd() {
       if (this.passwordType === "password") {
         this.passwordType = "";
@@ -120,7 +122,7 @@ export default {
         if (valid) {
           this.loading = true;
           this.$store
-            .dispatch("user/login", this.loginForm)
+            .dispatch("/login", this.loginForm)
             .then(() => {
               this.$router.push({ path: this.redirect || "/" });
               this.loading = false;
