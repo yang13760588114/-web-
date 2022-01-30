@@ -21,6 +21,8 @@
 </template>
 
 <script>
+import listFishNode from "@/api/fish";
+
 export default {};
 </script>
 
