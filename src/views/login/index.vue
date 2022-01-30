@@ -61,7 +61,7 @@
 
 <script>
 import { login } from "@/api/user";
-import router from "@/router";
+import { setToken, setUserId, setUserInfo } from "@/utils/auth";
 
 export default {
   name: "Login",
@@ -122,9 +122,12 @@ export default {
         if (valid) {
           this.loading = true;
           login(this.loginForm)
-            .then(() => {
+            .then((res) => {
+              setToken(res.result.token);
+              setUserInfo(res.result.userInfo);
+              setUserId(res.result.userInfo.id);
               console.log("登陆成功");
-              router.push("/fish");
+              this.$router.push({ path: "/fish" });
               this.loading = false;
             })
             .catch(() => {

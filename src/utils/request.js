@@ -13,18 +13,17 @@ const service = axios.create({
 const error = "ERROR!";
 
 // request interceptor
-service.interceptors.request
-  .use
-  // (config) => {
-  //   if (store.getters.token) {
-  //     config.headers["token"] = getToken();
-  //   }
-  //   return config;
-  // },
-  // (error) => {
-  //   return Promise.reject(error);
-  // }
-  ();
+service.interceptors.request.use(
+  (config) => {
+    if (store.getters.token) {
+      config.headers["token"] = getToken();
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 // 接口响应拦截
 service.interceptors.response.use(
