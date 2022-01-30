@@ -127,7 +127,7 @@ export default {
               setUserInfo(res.result.userInfo);
               setUserId(res.result.userInfo.id);
               console.log("登陆成功");
-              this.$router.push({ path: "/fish" });
+              this.$router.push({ path: "/" });
               this.loading = false;
             })
             .catch(() => {
