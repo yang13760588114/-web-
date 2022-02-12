@@ -6,3 +6,18 @@ export function listFishNode() {
     method: "get",
   });
 }
+
+export function removeFishNode(id) {
+  return request({
+    url: "/node/" + id,
+    method: "delete",
+  });
+}
+
+export function updateFishNode(node) {
+  return request({
+    url: "/node/edit",
+    data: node,
+    method: "post",
+  });
+}
