@@ -14,7 +14,7 @@ export function removeFishNode(id) {
   });
 }
 
-export function updateFishNode(node) {
+export function editFishNode(node) {
   return request({
     url: "/node/edit",
     data: node,

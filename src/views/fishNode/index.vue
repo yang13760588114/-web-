@@ -1,6 +1,18 @@
 <template>
   <div class="fish-node-container">
-    <h2 class="desc">鱼缸节点信息</h2>
+    <el-row type="flex" justify="space-between" class="desc">
+      <el-col>
+        <div class="nodeTitle">鱼缸节点信息</div>
+      </el-col>
+      <el-col>
+        <el-button
+          icon="el-icon-plus"
+          circle
+          @click="createFishNode = true"
+          class="addBtn"
+        />
+      </el-col>
+    </el-row>
     <div v-for="(node, index) in nodeList" :key="node.id">
       <el-descriptions
         :title="'节点' + (index + 1)"
@@ -61,16 +73,42 @@
         </el-descriptions-item>
       </el-descriptions>
     </div>
+    <!-- 添加鱼缸节点的弹窗 -->
+    <el-dialog title="收货地址" :visible.sync="createFishNode">
+      <el-form :model="newNode">
+        <el-form-item label="鱼缸节点名称">
+          <el-input v-model="newNode.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="描述">
+          <el-input v-model="newNode.description" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="位置">
+          <el-input v-model="newNode.location" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="createFishNode = false">取 消</el-button>
+        <el-button type="primary" @click="addFishNode(newNode)">
+          确 定
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { listFishNode, removeFishNode, updateFishNode } from "@/api/fish";
+import { listFishNode, removeFishNode, editFishNode } from "@/api/fish";
 
 export default {
   data() {
     return {
       nodeList: [],
+      createFishNode: false,
+      newNode: {
+        name: "",
+        location: "",
+        description: "",
+      },
     };
   },
   created() {
@@ -82,6 +120,7 @@ export default {
         this.nodeList = res.result;
       });
     },
+    // 更新鱼缸节点
     updateFishNode(node) {
       this.$confirm("是否更新鱼缸节点信息?", "提示", {
         confirmButtonText: "确定",
@@ -89,7 +128,7 @@ export default {
         type: "warning",
       })
         .then(() => {
-          updateFishNode(node).then((res) => {
+          editFishNode(node).then((res) => {
             if (res.success) {
               this.listNodes();
               this.$message({
@@ -111,6 +150,7 @@ export default {
           });
         });
     },
+    // 删除鱼缸节点
     removeFishNode(id) {
       this.$confirm("是否删除此鱼缸节点信息?", "提示", {
         confirmButtonText: "确定",
@@ -141,6 +181,24 @@ export default {
           });
         });
     },
+    // 添加鱼缸节点
+    addFishNode(node) {
+      this.createFishNode = false;
+      editFishNode(node).then((res) => {
+        if (res.success) {
+          this.listNodes();
+          this.$message({
+            type: "success",
+            message: "更新成功!",
+          });
+        } else {
+          this.$message({
+            type: "error",
+            message: "更新失败! " + res.message,
+          });
+        }
+      });
+    },
   },
 };
 </script>
@@ -148,5 +206,17 @@ export default {
 <style scoped>
 .desc {
   margin: 50px;
+}
+.title {
+  display: flex;
+  flex-direction: row;
+}
+.addBtn {
+  float: right;
+}
+.nodeTitle {
+  font-family: "微软雅黑";
+  font-size: 24px;
+  font-weight: bold;
 }
 </style>
