@@ -1,13 +1,25 @@
-<template></template>
+<template>
+  <div>
+    <p v-for="node in nodeList" :key="node.id">
+      <el-container>
+        <el-header> <svg-icon icon-class="yugang" /> {{ node.name }}</el-header>
+        <el-main>Main</el-main>
+      </el-container>
+    </p>
+  </div>
+</template>
 <script>
+import { listFishNode } from "@/api/fish";
 export default {
   data() {
     return {
-      shopId: "",
+      nodeList: [],
     };
   },
   created() {
-    // 页面创建生命周期函数
+    // 渲染鱼缸节点
+    this.nodes();
+    // 创建 socket 链接
     this.initWebSocket();
   },
   destroyed() {
@@ -15,6 +27,20 @@ export default {
     this.websocketclose();
   },
   methods: {
+    nodes() {
+      let res = listFishNode();
+      // 异步方法获取的结果需要用 then() 获取成功调用时的结果
+      res
+        .then((res) => {
+          this.nodeList = res.result;
+        })
+        .catch((res) => {
+          this.$message({
+            type: "error",
+            message: res.message,
+          });
+        });
+    },
     initWebSocket() {
       // WebSocket与普通的请求所用协议有所不同，ws等同于http，wss等同于https
       this.websock = new WebSocket("ws://localhost/znyg/socket/qr");
@@ -30,7 +56,7 @@ export default {
       console.log("WebSocket连接发生错误");
     },
     websocketonmessage(e) {
-      console.log(`Get Message: ${e.data}`);
+      // console.log(`Get Message: ${e.data}`);
     },
     websocketclose() {
       console.log(`connection closed`);
@@ -38,3 +64,39 @@ export default {
   },
 };
 </script>
+<style scoped>
+.el-header,
+.el-footer {
+  background-color: #b3c0d1;
+  color: #333;
+  text-align: center;
+  line-height: 60px;
+}
+
+.el-aside {
+  background-color: #d3dce6;
+  color: #333;
+  text-align: center;
+  line-height: 200px;
+}
+
+.el-main {
+  background-color: #e9eef3;
+  color: #333;
+  text-align: center;
+  line-height: 160px;
+}
+
+.el-container {
+  margin: 0px;
+}
+
+.el-container:nth-child(5) .el-aside,
+.el-container:nth-child(6) .el-aside {
+  line-height: 260px;
+}
+
+.el-container:nth-child(7) .el-aside {
+  line-height: 320px;
+}
+</style>
