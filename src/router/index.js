@@ -52,12 +52,19 @@ export const constantRoutes = [
   {
     path: "/record",
     component: Layout,
+    meta: { title: "记录数据", icon: "el-icon-data-line" },
     children: [
       {
+        path: "/record/realTime",
+        name: "RealTimeRecord",
+        component: () => import("@/views/record/realTime/index"),
+        meta: { title: "实时记录", icon: "el-icon-view" },
+      },
+      {
         path: "/record/history",
-        name: "Record",
-        component: () => import("@/views/record/index"),
-        meta: { title: "监控记录", icon: "el-icon-s-management" },
+        name: "HistoryRecord",
+        component: () => import("@/views/record/history/index"),
+        meta: { title: "历史记录", icon: "el-icon-receiving" },
       },
     ],
   },
