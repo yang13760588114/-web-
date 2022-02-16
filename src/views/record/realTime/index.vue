@@ -31,8 +31,8 @@ export default {
   methods: {
     showNodes() {
       let fishNodes = listFishNode();
+      // 异步方法获取的结果需要用 then() 获取成功调用时的结果
       fishNodes
-        // 异步方法获取的结果需要用 then() 获取成功调用时的结果
         .then((res) => {
           this.nodeList = res.result;
         })
