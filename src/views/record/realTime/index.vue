@@ -3,9 +3,7 @@
     <p v-for="node in nodeList" :key="node.id">
       <el-container>
         <el-header> <svg-icon icon-class="yugang" /> {{ node.name }}</el-header>
-        <el-main id="temperature">
-          <ve-line :data="chartData"></ve-line>
-        </el-main>
+        <el-main id="temperature"> Main </el-main>
       </el-container>
     </p>
   </div>
@@ -17,17 +15,7 @@ export default {
   data() {
     return {
       nodeList: [],
-      chartData: {
-        columns: ["日期", "销售额"],
-        rows: [
-          { 日期: "1月1日", 销售额: 123 },
-          { 日期: "1月2日", 销售额: 1223 },
-          { 日期: "1月3日", 销售额: 2123 },
-          { 日期: "1月4日", 销售额: 4123 },
-          { 日期: "1月5日", 销售额: 3123 },
-          { 日期: "1月6日", 销售额: 7123 },
-        ],
-      },
+      infoList: {},
     };
   },
   created() {
@@ -46,7 +34,8 @@ export default {
       // 异步方法获取的结果需要用 then() 获取成功调用时的结果
       res
         .then((res) => {
-          this.nodeList = res.result;
+          let result = res.result;
+          this.nodeList = result;
         })
         .catch((res) => {
           this.$message({
@@ -70,7 +59,12 @@ export default {
       console.log("WebSocket连接发生错误");
     },
     websocketonmessage(e) {
-      // console.log(`Get Message: ${e.data}`);
+      let recordArrays = JSON.parse(e.data);
+      console.dir(recordArrays[0]);
+      for (const info of recordArrays) {
+        // 动态设置 infoList 的属性, 这里感觉很耗费性能
+        this.$set(this.infoList, `chartData${info[0].nodeId}`, info);
+      }
     },
     websocketclose() {
       console.log(`connection closed`);
