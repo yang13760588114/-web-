@@ -20,8 +20,8 @@ export default {
   },
   created() {
     // 渲染鱼缸节点
-    this.nodes();
-    // 创建 socket 链接
+    this.showNodes();
+    // 创建 socket 连接
     this.initWebSocket();
   },
   destroyed() {
@@ -29,13 +29,12 @@ export default {
     this.websocketclose();
   },
   methods: {
-    nodes() {
-      let res = listFishNode();
-      // 异步方法获取的结果需要用 then() 获取成功调用时的结果
-      res
+    showNodes() {
+      let fishNodes = listFishNode();
+      fishNodes
+        // 异步方法获取的结果需要用 then() 获取成功调用时的结果
         .then((res) => {
-          let result = res.result;
-          this.nodeList = result;
+          this.nodeList = res.result;
         })
         .catch((res) => {
           this.$message({
@@ -61,9 +60,9 @@ export default {
     websocketonmessage(e) {
       let recordArrays = JSON.parse(e.data);
       console.dir(recordArrays[0]);
-      for (const info of recordArrays) {
-        this.$set(this.infoList, `chartData${info.nodeId}`, info);
-      }
+      // for (const info of recordArrays) {
+      //   this.$set(this.infoList, `chartData${info.nodeId}`, info);
+      // }
     },
     websocketclose() {
       console.log(`WebSocket连接关闭`);

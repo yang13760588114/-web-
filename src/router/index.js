@@ -38,14 +38,14 @@ export const constantRoutes = [
       {
         path: "/fish/node",
         name: "FishNode",
-        component: () => import("@/views/fishNode/index"),
+        component: () => import("@/views/fish/fishNode/index"),
         meta: { title: "鱼缸信息", icon: "el-icon-takeaway-box" },
       },
       {
         path: "/fish/info",
         name: "FishInfo",
-        component: () => import("@/views/fishInfo/index"),
-        meta: { title: "养鱼信息", icon: "el-icon-view" },
+        component: () => import("@/views/fish/fishInfo/index"),
+        meta: { title: "养鱼信息", icon: "yu2" },
       },
     ],
   },
