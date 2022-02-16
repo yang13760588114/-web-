@@ -22,6 +22,10 @@ if (process.env.NODE_ENV === "production") {
 
 Vue.use(ElementUI, { locale });
 
+// v-charts 模块
+import VCharts from "v-charts";
+Vue.use(VCharts);
+
 new Vue({
   el: "#app",
   router,
