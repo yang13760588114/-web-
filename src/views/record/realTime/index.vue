@@ -3,7 +3,7 @@
     <p v-for="node in nodeList" :key="node.id">
       <el-container>
         <el-header> <svg-icon icon-class="yugang" /> {{ node.name }}</el-header>
-        <el-main id="temperature">Main</el-main>
+        <el-main id="temperature"> Main </el-main>
       </el-container>
     </p>
   </div>
@@ -66,6 +66,9 @@ export default {
 };
 </script>
 <style scoped>
+.chart {
+  height: 400px;
+}
 .el-header,
 .el-footer {
   background-color: #b3c0d1;
