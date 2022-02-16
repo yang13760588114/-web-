@@ -3,13 +3,14 @@
     <p v-for="node in nodeList" :key="node.id">
       <el-container>
         <el-header> <svg-icon icon-class="yugang" /> {{ node.name }}</el-header>
-        <el-main>Main</el-main>
+        <el-main id="temperature">Main</el-main>
       </el-container>
     </p>
   </div>
 </template>
 <script>
 import { listFishNode } from "@/api/fish";
+
 export default {
   data() {
     return {
