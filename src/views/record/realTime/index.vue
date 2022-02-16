@@ -56,18 +56,17 @@ export default {
       console.log("WebSocket连接成功");
     },
     websocketonerror() {
-      console.log("WebSocket连接发生错误");
+      console.log("WebSocket连接错误");
     },
     websocketonmessage(e) {
       let recordArrays = JSON.parse(e.data);
       console.dir(recordArrays[0]);
       for (const info of recordArrays) {
-        // 动态设置 infoList 的属性, 这里感觉很耗费性能
-        this.$set(this.infoList, `chartData${info[0].nodeId}`, info);
+        this.$set(this.infoList, `chartData${info.nodeId}`, info);
       }
     },
     websocketclose() {
-      console.log(`connection closed`);
+      console.log(`WebSocket连接关闭`);
     },
   },
 };
