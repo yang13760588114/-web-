@@ -9,7 +9,9 @@
             <el-switch
               v-model="degerming"
               active-text="开"
+              active-value="1"
               inactive-text="关"
+              inactive-value="0"
             />
           </div>
           <div>
@@ -17,7 +19,7 @@
             <el-switch v-model="heater" active-text="开" inactive-text="关" />
           </div>
           <div>
-            灯光:
+            灯 光:
             <el-switch v-model="light" active-text="开" inactive-text="关" />
           </div>
         </el-aside>
@@ -45,27 +47,13 @@ export default {
   },
   data() {
     return {
-      degerming: false,
-      heater: false,
-      light: false,
+      // 除菌器
+      degerming: 0,
+      // 加热器
+      heater: 0,
+      // 灯光
+      light: 0,
       chart: {},
-      chartOptions: {
-        title: {
-          text: "实时温度",
-        },
-        tooltip: {},
-        xAxis: {
-          data: this.temperatures,
-        },
-        yAxis: {},
-        series: [
-          {
-            name: "记录时间",
-            type: "line",
-            data: this.dates,
-          },
-        ],
-      },
     };
   },
   methods: {
@@ -74,32 +62,20 @@ export default {
       record
         .then((res) => {
           // 除菌器
-          if (res.result.degerming == 1) {
-            this.degerming = true;
-          } else {
-            this.degerming = false;
-          }
+          this.degerming = res.result.degerming;
           // 加热器
-          if (res.result.heater == 1) {
-            this.heater = true;
-          } else {
-            this.heater = false;
-          }
+          this.heater = res.result.heater;
           // 灯光
-          if (res.result.light == 1) {
-            this.light = true;
-          } else {
-            this.light = false;
-          }
+          this.light = res.result.light;
+          // 折线图数据: 温度, 时间
           this.chart.setOption({
             xAxis: {
-              data: res.result.temperatures,
+              data: res.result.dates,
             },
             series: [
               {
                 name: "记录时间",
-                type: "line",
-                data: res.result.dates,
+                data: res.result.temperatures,
               },
             ],
           });
@@ -113,12 +89,34 @@ export default {
     },
   },
   mounted() {
-    // 没有返回值的函数不要加"()"
-    setInterval(this.showRealTimeRecords, 2000);
     // 基于准备好的dom，初始化echarts实例
     this.chart = echarts.init(document.getElementById("nodeId" + this.nodeId));
     // 绘制图表
-    this.chart.setOption(this.chartOptions);
+    this.chart.setOption({
+      title: {
+        text: "实时温度",
+      },
+      xAxis: {
+        alignTicks: true,
+        name: "时间",
+        data: [],
+      },
+      yAxis: {
+        name: "温度",
+        type: "value",
+      },
+      series: [
+        {
+          name: "记录时间",
+          type: "line",
+          data: [],
+        },
+      ],
+    });
+    // 没有返回值的函数不要加"()"
+    setInterval(() => {
+      this.showRealTimeRecords();
+    }, 1000);
   },
 };
 </script>
