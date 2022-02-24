@@ -3,6 +3,8 @@ import { Message } from "element-ui";
 import store from "@/store";
 import { getToken } from "@/utils/auth";
 
+axios.defaults.withCredentials = true; //Cookie跨域
+
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url

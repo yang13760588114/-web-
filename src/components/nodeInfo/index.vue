@@ -4,24 +4,9 @@
       <el-header> <svg-icon icon-class="yugang" /> {{ nodeName }}</el-header>
       <el-container>
         <el-aside width="200px">
-          <div>
-            除菌器:
-            <el-switch
-              v-model="degerming"
-              active-text="开"
-              active-value="1"
-              inactive-text="关"
-              inactive-value="0"
-            />
-          </div>
-          <div>
-            加热器:
-            <el-switch v-model="heater" active-text="开" inactive-text="关" />
-          </div>
-          <div>
-            灯 光:
-            <el-switch v-model="light" active-text="开" inactive-text="关" />
-          </div>
+          <statusFlag :name="flagNames[0]" :flag="degerming" />
+          <statusFlag :name="flagNames[1]" :flag="heater" />
+          <statusFlag :name="flagNames[2]" :flag="light" />
         </el-aside>
         <el-main>
           <div
@@ -36,23 +21,27 @@
 
 <script>
 import { realTimeRecords } from "@/api/record";
-
+import statusFlag from "@/components/statusFlag";
 import * as echarts from "echarts";
+import { setBooleanValue } from "@/utils/value";
 
 export default {
   name: "nodeInfo",
+  components: { statusFlag },
   props: {
     nodeId: Number,
     nodeName: String,
   },
   data() {
     return {
+      // flagNames
+      flagNames: ["除菌器", "加热器", "灯光"],
       // 除菌器
-      degerming: 0,
+      degerming: false,
       // 加热器
-      heater: 0,
+      heater: false,
       // 灯光
-      light: 0,
+      light: false,
       chart: {},
     };
   },
@@ -62,11 +51,11 @@ export default {
       record
         .then((res) => {
           // 除菌器
-          this.degerming = res.result.degerming;
+          this.degerming = setBooleanValue(res.result.degerming);
           // 加热器
-          this.heater = res.result.heater;
+          this.heater = setBooleanValue(res.result.heater);
           // 灯光
-          this.light = res.result.light;
+          this.light = setBooleanValue(res.result.light);
           // 折线图数据: 温度, 时间
           this.chart.setOption({
             xAxis: {
@@ -102,6 +91,7 @@ export default {
         data: [],
       },
       yAxis: {
+        alignTicks: true,
         name: "温度",
         type: "value",
       },
