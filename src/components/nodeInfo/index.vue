@@ -1,13 +1,21 @@
 <template>
   <div>
-    <el-container>
+    <el-container class="container">
       <el-header> <svg-icon icon-class="yugang" /> {{ nodeName }}</el-header>
-      <el-main id="temperature"> Main </el-main>
+      <el-container>
+        <el-aside width="200px">Aside</el-aside>
+        <el-main>
+          <div>temperature: {{ temperatures }}</div>
+          <div>dates: {{ dates }}</div>
+        </el-main>
+      </el-container>
     </el-container>
   </div>
 </template>
 
 <script>
+import { realTimeRecords } from "@/api/record";
+
 export default {
   name: "nodeInfo",
   props: {
@@ -16,15 +24,44 @@ export default {
   },
   data() {
     return {
-      nodeInfo: {},
+      dates: [],
+      temperatures: [],
+      degerming: 0,
+      heater: 0,
+      light: 0,
     };
   },
-  methods: {},
-  created: {},
+  methods: {
+    showRealTimeRecords() {
+      const record = realTimeRecords(this.nodeId);
+      record
+        .then((res) => {
+          this.dates = res.result.dates;
+          this.temperatures = res.result.temperatures;
+          this.degerming = res.result.degerming;
+          this.heater = res.result.heater;
+          this.light = res.result.light;
+        })
+        .catch((res) => {
+          this.$message({
+            type: "error",
+            message: res.message,
+          });
+        });
+    },
+  },
+  mounted() {
+    // 没有返回值的函数不要加"()"
+    setInterval(this.showRealTimeRecords, 2000);
+  },
 };
 </script>
 
 <style scoped>
+/* .container {
+  margin-left: 50px;
+  margin-right: 50px;
+} */
 .chart {
   height: 400px;
 }
