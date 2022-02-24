@@ -3,13 +3,29 @@
     <el-container class="container">
       <el-header> <svg-icon icon-class="yugang" /> {{ nodeName }}</el-header>
       <el-container>
-        <el-aside width="200px">Aside</el-aside>
+        <el-aside width="200px">
+          <div>
+            除菌器:
+            <el-switch
+              v-model="degerming"
+              active-text="开"
+              inactive-text="关"
+            />
+          </div>
+          <div>
+            加热器:
+            <el-switch v-model="heater" active-text="开" inactive-text="关" />
+          </div>
+          <div>
+            灯光:
+            <el-switch v-model="light" active-text="开" inactive-text="关" />
+          </div>
+        </el-aside>
         <el-main>
-          <v-chart class="chart" :option="option"></v-chart>
-          <div>temperature: {{ temperatures }}</div>
-          <div>dates: {{ dates }}</div>
-          <!-- 为 ECharts 准备一个定义了宽高的 DOM -->
-          <div id="main" style="width: 600px; height: 400px"></div>
+          <div
+            :id="'nodeId' + nodeId"
+            style="width: 600px; height: 400px"
+          ></div>
         </el-main>
       </el-container>
     </el-container>
@@ -19,6 +35,8 @@
 <script>
 import { realTimeRecords } from "@/api/record";
 
+import * as echarts from "echarts";
+
 export default {
   name: "nodeInfo",
   props: {
@@ -27,11 +45,27 @@ export default {
   },
   data() {
     return {
-      dates: [],
-      temperatures: [],
-      degerming: 0,
-      heater: 0,
-      light: 0,
+      degerming: false,
+      heater: false,
+      light: false,
+      chart: {},
+      chartOptions: {
+        title: {
+          text: "实时温度",
+        },
+        tooltip: {},
+        xAxis: {
+          data: this.temperatures,
+        },
+        yAxis: {},
+        series: [
+          {
+            name: "记录时间",
+            type: "line",
+            data: this.dates,
+          },
+        ],
+      },
     };
   },
   methods: {
@@ -39,11 +73,36 @@ export default {
       const record = realTimeRecords(this.nodeId);
       record
         .then((res) => {
-          this.dates = res.result.dates;
-          this.temperatures = res.result.temperatures;
-          this.degerming = res.result.degerming;
-          this.heater = res.result.heater;
-          this.light = res.result.light;
+          // 除菌器
+          if (res.result.degerming == 1) {
+            this.degerming = true;
+          } else {
+            this.degerming = false;
+          }
+          // 加热器
+          if (res.result.heater == 1) {
+            this.heater = true;
+          } else {
+            this.heater = false;
+          }
+          // 灯光
+          if (res.result.light == 1) {
+            this.light = true;
+          } else {
+            this.light = false;
+          }
+          this.chart.setOption({
+            xAxis: {
+              data: res.result.temperatures,
+            },
+            series: [
+              {
+                name: "记录时间",
+                type: "line",
+                data: res.result.dates,
+              },
+            ],
+          });
         })
         .catch((res) => {
           this.$message({
@@ -56,18 +115,15 @@ export default {
   mounted() {
     // 没有返回值的函数不要加"()"
     setInterval(this.showRealTimeRecords, 2000);
+    // 基于准备好的dom，初始化echarts实例
+    this.chart = echarts.init(document.getElementById("nodeId" + this.nodeId));
+    // 绘制图表
+    this.chart.setOption(this.chartOptions);
   },
 };
 </script>
 
 <style scoped>
-/* .container {
-  margin-left: 50px;
-  margin-right: 50px;
-} */
-.chart {
-  height: 400px;
-}
 .el-header,
 .el-footer {
   background-color: #b3c0d1;
@@ -80,7 +136,7 @@ export default {
   background-color: #d3dce6;
   color: #333;
   text-align: center;
-  line-height: 200px;
+  line-height: 120px;
 }
 
 .el-main {

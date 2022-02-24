@@ -15,12 +15,6 @@ import router from "./router";
 import "@/icons"; // icon
 import "@/permission"; // permission control
 
-// vue-echarts
-import ECharts from "vue-echarts";
-import "echarts/lib/chart/bar";
-import "echarts/lib/component/tooltip";
-Vue.component("v-chart", ECharts);
-
 if (process.env.NODE_ENV === "production") {
   const { mockXHR } = require("../mock");
   mockXHR();
