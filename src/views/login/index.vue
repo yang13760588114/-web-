@@ -126,7 +126,6 @@ export default {
               setToken(res.result.token);
               setUserInfo(res.result.userInfo);
               setUserId(res.result.userInfo.id);
-              console.log("登陆成功");
               this.$router.push({ path: "/" });
               this.loading = false;
             })
