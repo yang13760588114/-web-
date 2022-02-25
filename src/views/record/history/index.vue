@@ -1,6 +1,11 @@
 <template>
   <div>
-    <el-table :data="tableData" height="250" border style="width: 100%">
+    <el-table :data="tableData" height="530" border style="width: 100%">
+      <el-table-column label="日期" width="180">
+        <template slot-scope="scope">
+          {{ scope.$index + 1 }}
+        </template>
+      </el-table-column>
       <el-table-column prop="date" label="日期" width="180"> </el-table-column>
       <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
       <el-table-column prop="address" label="地址"> </el-table-column>
@@ -50,6 +55,15 @@ export default {
         },
       ],
     };
+  },
+  created() {
+    setInterval(() => {
+      this.tableData.push({
+        date: "2016-05-07",
+        name: "王小虎",
+        address: "上海市普陀区金沙江路 1518 弄",
+      });
+    }, 500);
   },
 };
 </script>
