@@ -34,7 +34,10 @@
         </el-dropdown>
         <i class="el-icon-close" @click="clear" style="margin-left: 10px" />
       </div>
-      <el-button icon="el-icon-search" class="search-btn" @click="search" />
+      <div class="items">
+        <i class="el-icon-sort" @click="sort" />
+        <el-button icon="el-icon-search" class="search-btn" @click="search" />
+      </div>
     </div>
     <el-table
       :data="tableData"
@@ -70,18 +73,11 @@
       </el-table-column>
     </el-table>
     <div class="paging">
-      <el-button
-        icon="el-icon-sort"
-        circle
-        size="mini"
-        class="sort-btn"
-        @click="sort"
-      />
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="request.page"
-        :page-sizes="[20, 50, 100]"
+        :page-sizes="[10, 20, 50, 100]"
         :page-size="request.pageSize"
         layout="total, sizes, prev, pager, next, jumper, ->"
         hide-on-single-page
@@ -100,7 +96,7 @@ export default {
     return {
       nodes: [],
       tableData: [],
-      queryTime: null,
+      queryTime: [],
       count: 0,
       totalPage: 0,
       dropdownItemName: "鱼缸选择",
@@ -111,7 +107,7 @@ export default {
         startTime: null,
         endTime: null,
         page: 1,
-        pageSize: 20,
+        pageSize: 10,
         nodeId: null,
         orderType: 1,
       },
@@ -127,13 +123,11 @@ export default {
       this.dropdownItemName = "鱼缸选择";
     },
     search() {
-      if (this.queryTime !== null) {
-        if (this.queryTime[0] !== null) {
-          this.request.startTime = this.queryTime[0];
-        }
-        if (this.queryTime[1] !== null) {
-          this.request.endTime = this.queryTime[1];
-        }
+      if (this.queryTime[0] !== null) {
+        this.request.startTime = this.queryTime[0];
+      }
+      if (this.queryTime[1] !== null) {
+        this.request.endTime = this.queryTime[1];
       }
       this.pageRecord(this.request);
     },
@@ -204,9 +198,6 @@ el-input {
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-}
-.sort-btn {
-  border-style: none;
 }
 .paging {
   display: flex;
