@@ -71,21 +71,15 @@ export const constantRoutes = [
   {
     path: "/command",
     component: Layout,
-    redirect: "/command/history",
+    redirect: "/command/record",
     name: "Command",
     meta: { title: "控制命令", icon: "nested" },
     children: [
       {
-        path: "/command/history",
-        component: () => import("@/views/command/history/index"),
+        path: "/command/record",
         name: "CommandRecord",
-        meta: { title: "历史命令", icon: "el-icon-s-unfold" },
-      },
-      {
-        path: "/command/send",
-        component: () => import("@/views/command/send/index"),
-        name: "CommandSend",
-        meta: { title: "发送命令", icon: "el-icon-phone-outline" },
+        component: () => import("@/views/command/index"),
+        meta: { title: "控制命令", icon: "el-icon-receiving" },
       },
     ],
   },
