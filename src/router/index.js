@@ -83,7 +83,7 @@ export const constantRoutes = [
       },
       {
         path: "/command/send",
-        component: () => import("@/views/command/detail/index"),
+        component: () => import("@/views/command/send/index"),
         name: "CommandSend",
         meta: { title: "发送命令", icon: "el-icon-phone-outline" },
       },
