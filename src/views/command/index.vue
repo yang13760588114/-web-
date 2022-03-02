@@ -1,105 +1,140 @@
 <template>
   <div>
-    <el-table
-      :data="tableData"
+    <el-descriptions
+      class="margin-top"
+      title="控制命令状态"
+      :column="4"
+      style="margin: 30px"
       border
-      style="width: 100%"
-      :header-cell-style="columnStyle"
-      :cell-style="columnStyle"
+      :contentStyle="{ 'text-align': 'center' }"
     >
-      <el-table-column label="序号" width="80">
-        <template slot-scope="scope">
-          {{ scope.$index + 1 }}
+      <template slot="extra">
+        <el-button
+          type="primary"
+          size="small"
+          @click="drawer = true"
+          circle
+          icon="el-icon-plus"
+        />
+      </template>
+      <el-descriptions-item>
+        <template slot="label">
+          <svg-icon icon-class="yugang" />鱼缸编号
         </template>
-      </el-table-column>
-      <el-table-column label="命令状态" width="150">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.tagType">{{
-            scope.row.commandStatusText
-          }}</el-tag>
+        {{ command.nodeId }}
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-odometer"></i>
+          温度
         </template>
-      </el-table-column>
-      <el-table-column label="发送命令解析" width="720">
-        <el-table-column prop="nodeId" label="鱼缸编号" width="150" />
-        <el-table-column prop="temperature" label="设置温度" width="180" />
-        <el-table-column prop="createTime" label="命令发送时间" width="180" />
-        <el-table-column prop="degerming" label="除菌器" width="180" />
-        <el-table-column prop="light" label="灯光" width="180" />
-        <el-table-column label="操作" prop="id">
-          <template slot-scope="scope">
-            <el-button
-              size="mini"
-              type="danger"
-              @click="remove(scope.row.id)"
-              icon="el-icon-delete"
-            >
-              删除
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table-column>
-    </el-table>
-    <div class="paging">
-      <el-button type="primary" icon="el-icon-plus" circle />
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="request.page"
-        :page-sizes="[10, 20, 30]"
-        :page-size="request.pageSize"
-        layout="total, sizes, prev, pager, next, jumper, ->"
-        hide-on-single-page
-        :total="count"
-      >
-      </el-pagination>
-    </div>
+        {{ command.temperature }}
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-magic-stick"></i>
+          灯光
+        </template>
+        {{ command.light }}
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-wind-power"></i>
+          除菌器
+        </template>
+        {{ command.degerming }}
+      </el-descriptions-item>
+      <el-descriptions-item span="1">
+        <template slot="label">
+          <i class="el-icon-finished"></i>
+          执行状态
+        </template>
+        <el-tag :type="tagType">{{ command.commandStatusText }}</el-tag>
+      </el-descriptions-item>
+      <el-descriptions-item>
+        <template slot="label">
+          <i class="el-icon-chat-dot-square"></i>
+          命令文本
+        </template>
+        {{ command.commandText }}
+      </el-descriptions-item>
+    </el-descriptions>
+    <!-- 设置命令的抽屉页面 -->
+    <el-drawer
+      title="创建命令"
+      :visible.sync="drawer"
+      direction="rtl"
+      :before-close="handleClose"
+    >
+      <el-form label-position="right" label-width="80px">
+        <el-form-item label="鱼缸编号">
+          <el-input-number
+            v-model="nodeId"
+            controls-position="right"
+            size="mini"
+            :step="1"
+            :min="0"
+            :max="99"
+          ></el-input-number>
+        </el-form-item>
+        <el-form-item label="温度/°C">
+          <el-input-number
+            v-model="temperature"
+            controls-position="right"
+            size="mini"
+            :step="1"
+            :min="10"
+            :max="40"
+          ></el-input-number>
+        </el-form-item>
+        <el-form-item label="灯光">
+          <el-radio-group v-model="light">
+            <el-radio label="N">关闭</el-radio>
+            <el-radio label="Y">开启</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="除菌器">
+          <el-radio-group v-model="degerming">
+            <el-radio label="N">关闭</el-radio>
+            <el-radio label="Y">开启</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+    </el-drawer>
   </div>
 </template>
 
 <script>
-import { pageCommandRecords, removeCommand } from "@/api/command";
-import { listFishNode } from "@/api/fish";
+/**控制命令格式为“KxxddssB”，
+ * “K”为数据包开始标志，
+ * “xx”为鱼缸编号，范围为“00-99”，
+ * “dd”为设置的温度目标值，
+ * “ss”分别代表要求灯光和除菌器开启或者关闭，“s”取值为”Y”表示开启，取值为“N”表示关闭，
+ * 字母“B”为数据包结束标志和表示控制命令来自web程序。
+ * */
+import { getCommandRecord, removeCommand } from "@/api/command";
 export default {
   data() {
     return {
-      count: 0,
-      totalPage: 0,
+      drawer: false,
       columnStyle: {
         textAlign: "center",
       },
-      tagType: "info",
-      request: {
-        page: 1,
-        pageSize: 10,
-        nodeId: null,
-        orderType: 1,
-      },
+      command: {},
+      tagType: null,
+      nodeId: null,
+      temperature: 15,
+      light: null,
+      degerming: null,
     };
   },
   methods: {
-    search() {
-      if (this.queryTime[0] !== null) {
-        this.request.startTime = this.queryTime[0];
-      }
-      if (this.queryTime[1] !== null) {
-        this.request.endTime = this.queryTime[1];
-      }
-      this.pageRecord(this.request);
-    },
-    sort() {
-      let orderType = this.request.orderType;
-      orderType === 1
-        ? (this.request.orderType = 2)
-        : (this.request.orderType = 1);
-      this.pageRecord(this.request);
-    },
-    handleSizeChange(size) {
-      this.request.pageSize = size;
-      this.pageRecord(this.request);
-    },
-    handleCurrentChange(page) {
-      this.request.page = page;
-      this.pageRecord(this.request);
+    handleClose(done) {
+      this.$confirm("确认关闭？")
+        .then((_) => {
+          done();
+        })
+        .catch((_) => {});
     },
     remove(recordId) {
       this.$confirm("确定删除该条记录?", "提示", {
@@ -108,7 +143,7 @@ export default {
         type: "warning",
       }).then(() => {
         removeCommand(recordId).then((res) => {
-          this.pageRecord(this.request);
+          this.getRecord();
           this.$message({
             type: "success",
             message: res.message,
@@ -116,50 +151,25 @@ export default {
         });
       });
     },
-    pageRecord(request) {
-      pageCommandRecords(request).then((res) => {
-        const page = res.result;
-        this.tableData = page.records;
-        this.count = page.count;
-        this.totalPage = page.totalPage;
+    getRecord() {
+      getCommandRecord().then((res) => {
+        this.command = res.result;
+        this.tagType = res.result.tagType;
       });
     },
   },
   created() {
-    this.pageRecord(this.request);
-    listFishNode().then((res) => {
-      this.nodes = res.result;
-    });
+    this.getRecord();
   },
 };
 </script>
 
 <style scoped>
-el-input {
-  width: 50px;
-}
-.search-btn {
-  border-style: none;
-  float: right;
-}
-.items {
-  display: flex;
-  flex-direction: row;
-  justify-content: left;
-  align-items: center;
-}
-.paging {
-  display: flex;
-  flex-direction: row;
-  float: right;
-  align-items: center;
-}
-.el-dropdown-link {
-  cursor: pointer;
-  color: #409eff;
-}
 .el-icon-arrow-down {
   font-size: 12px;
+}
+.el-descriptions-item {
+  text-align: center;
 }
 .demonstration {
   display: block;

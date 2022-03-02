@@ -1,10 +1,9 @@
 import request from "@/utils/request";
 
-export function pageCommandRecords(pageRequest) {
+export function getCommandRecord() {
   return request({
-    url: "/command/page",
-    data: pageRequest,
-    method: "post",
+    url: "/command/get",
+    method: "get",
   });
 }
 
