@@ -9,7 +9,15 @@ export function getCommandRecord() {
 
 export function removeCommand(recordId) {
   return request({
-    url: `/record/remove/${recordId}`,
+    url: `/command/remove/${recordId}`,
     method: "delete",
+  });
+}
+
+export function saveCommand(body) {
+  return request({
+    url: `/command/save`,
+    data: body,
+    method: "post",
   });
 }

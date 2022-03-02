@@ -99,6 +99,9 @@
             <el-radio label="Y">开启</el-radio>
           </el-radio-group>
         </el-form-item>
+        <el-button type="primary" round style="margin: 10px" @click="commit()"
+          >commit</el-button
+        >
       </el-form>
     </el-drawer>
   </div>
@@ -112,7 +115,8 @@
  * “ss”分别代表要求灯光和除菌器开启或者关闭，“s”取值为”Y”表示开启，取值为“N”表示关闭，
  * 字母“B”为数据包结束标志和表示控制命令来自web程序。
  * */
-import { getCommandRecord, removeCommand } from "@/api/command";
+import { getCommandRecord, removeCommand, saveCommand } from "@/api/command";
+import { setNodeId } from "@/utils/value";
 export default {
   data() {
     return {
@@ -124,11 +128,40 @@ export default {
       tagType: null,
       nodeId: null,
       temperature: 15,
-      light: null,
-      degerming: null,
+      light: "N",
+      degerming: "N",
     };
   },
   methods: {
+    commit() {
+      let command =
+        "K" +
+        setNodeId(this.nodeId) +
+        this.temperature +
+        this.light +
+        this.degerming +
+        "B";
+      const body = { command: command };
+      const res = this.commitCommand(body);
+      res
+        .then(() => {
+          this.$message({
+            type: "success",
+            message: "创建命令成功!",
+          });
+          this.drawer = false;
+          this.getRecord();
+          setTimeout(() => {
+            this.getRecord();
+          }, 5000);
+        })
+        .catch((res) => {
+          this.$message(res.message);
+        });
+    },
+    commitCommand(command) {
+      return saveCommand(command);
+    },
     handleClose(done) {
       this.$confirm("确认关闭？")
         .then((_) => {

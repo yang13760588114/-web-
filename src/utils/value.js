@@ -7,3 +7,13 @@ export function setBooleanValue(num) {
     }
   }
 }
+
+export function setNodeId(num) {
+  if (Number.isInteger(num)) {
+    if (num < 10) {
+      return "0" + num;
+    } else {
+      return num + "";
+    }
+  }
+}
