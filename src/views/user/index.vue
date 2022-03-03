@@ -1,6 +1,21 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">name: QR</div>
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span class="title">当前用户</span>
+      </div>
+      <el-form label-position="right" label-width="80px">
+        <el-form-item label="账户">
+          <span>{{ userInfo.username }}</span>
+        </el-form-item>
+        <el-form-item label="手机号">
+          <el-input v-model="userInfo.phoneNumber"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱">
+          <el-input v-model="userInfo.eMail"></el-input>
+        </el-form-item>
+      </el-form>
+    </el-card>
   </div>
 </template>
 
@@ -10,12 +25,16 @@ export default {
   name: "Dashboard",
   data() {
     return {
-      userInfo: null,
+      userInfo: {
+        username: String,
+        phoneNumber: String,
+      },
     };
   },
   methods: {
     mountUserInfo() {
       this.userInfo = getUserInfo();
+      console.log(this.userInfo);
     },
   },
   created() {
@@ -25,6 +44,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.title {
+  color: blue;
+}
 .dashboard {
   &-container {
     margin: 30px;
@@ -33,5 +55,22 @@ export default {
     font-size: 30px;
     line-height: 46px;
   }
+}
+.text {
+  font-size: 14px;
+}
+.item {
+  margin-bottom: 18px;
+}
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both;
+}
+.box-card {
+  width: 480px;
 }
 </style>

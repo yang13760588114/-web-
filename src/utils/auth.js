@@ -36,6 +36,10 @@ export function getUserInfo() {
   return getCookie(UserInfo);
 }
 
+export function removeUserInfo() {
+  return Cookies.remove(UserInfo);
+}
+
 // userId
 export function setUserId(userId) {
   return setCookie(UserId, userId);
@@ -43,4 +47,14 @@ export function setUserId(userId) {
 
 export function getUserId() {
   return getCookie(UserId);
+}
+
+export function removeUserId() {
+  return Cookies.remove(UserId);
+}
+
+export function clearCookies() {
+  removeToken();
+  removeUserId();
+  removeUserInfo();
 }
