@@ -1,40 +1,25 @@
 <template>
   <div class="dashboard-container">
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <span class="title">当前用户</span>
-      </div>
-      <el-form label-position="right" label-width="80px">
-        <el-form-item label="账户">
-          <span>{{ userInfo.username }}</span>
-        </el-form-item>
-        <el-form-item label="手机号">
-          <el-input v-model="userInfo.phoneNumber"></el-input>
-        </el-form-item>
-        <el-form-item label="邮箱">
-          <el-input v-model="userInfo.eMail"></el-input>
-        </el-form-item>
-      </el-form>
-    </el-card>
+    <userCard :userInfo="userInfo"></userCard>
   </div>
 </template>
 
 <script>
 import { getUserInfo } from "@/utils/auth";
+import userCard from "@/components/UserCard";
 export default {
   name: "Dashboard",
+  components: { userCard },
   data() {
     return {
-      userInfo: {
-        username: String,
-        phoneNumber: String,
-      },
+      userInfo: null,
     };
   },
   methods: {
     mountUserInfo() {
-      this.userInfo = getUserInfo();
-      console.log(this.userInfo);
+      let user = getUserInfo();
+      // 这里需要用 JSON 转换一下, 应为 cookie 存的东西再取出来是字符串
+      this.userInfo = JSON.parse(user);
     },
   },
   created() {
@@ -44,9 +29,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.title {
-  color: blue;
-}
 .dashboard {
   &-container {
     margin: 30px;
@@ -55,22 +37,5 @@ export default {
     font-size: 30px;
     line-height: 46px;
   }
-}
-.text {
-  font-size: 14px;
-}
-.item {
-  margin-bottom: 18px;
-}
-.clearfix:before,
-.clearfix:after {
-  display: table;
-  content: "";
-}
-.clearfix:after {
-  clear: both;
-}
-.box-card {
-  width: 480px;
 }
 </style>
