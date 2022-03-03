@@ -52,13 +52,13 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(state.token)
         .then((response) => {
-          let userInfo = response.result;
-          if (!userInfo) {
+          let data = response.result;
+          if (!data) {
             return reject("Verification failed, please Login again.");
           }
-          commit("SET_NAME", userInfo.name);
-          commit("SET_AVATAR", userInfo.avatar);
-          resolve(userInfo);
+          commit("SET_NAME", data.name);
+          commit("SET_AVATAR", data.avatar);
+          resolve(data);
         })
         .catch((error) => {
           reject(error);
