@@ -5,8 +5,9 @@ import { resetRouter } from "@/router";
 const getDefaultState = () => {
   return {
     token: getToken(),
-    name: "",
-    avatar: "",
+    name: "QR",
+    avatar:
+      "https://qr-store-image.oss-cn-guangzhou.aliyuncs.com/img/avatar.jpg",
   };
 };
 
@@ -33,10 +34,11 @@ const actions = {
     const { username, password } = userInfo;
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password })
-        .then((response) => {
-          const { data } = response;
-          commit("SET_TOKEN", data.token);
-          setToken(data.token);
+        .then((res) => {
+          // 存储 token
+          const token = res.result.token;
+          commit("SET_TOKEN", token);
+          setToken(token);
           resolve();
         })
         .catch((error) => {
@@ -50,13 +52,13 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(state.token)
         .then((response) => {
-          let data = response.result;
-          if (!data) {
+          let userInfo = response.result;
+          if (!userInfo) {
             return reject("Verification failed, please Login again.");
           }
-          commit("SET_NAME", data.name);
-          commit("SET_AVATAR", data.avatar);
-          resolve(data);
+          commit("SET_NAME", userInfo.name);
+          commit("SET_AVATAR", userInfo.avatar);
+          resolve(userInfo);
         })
         .catch((error) => {
           reject(error);
