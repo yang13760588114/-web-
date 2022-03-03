@@ -45,8 +45,6 @@
           />
         </span>
       </el-form-item>
-      <!-- .native 个人理解成调用 js 原生命令 -->
-      <!-- .prevent 修饰符告诉  指令对于触发的事件调用 event.preventDefault() -->
       <el-button
         :loading="loading"
         type="primary"
@@ -62,7 +60,6 @@
 <script>
 import { login } from "@/api/user";
 import { setToken, setUserId, setUserInfo } from "@/utils/auth";
-
 export default {
   name: "Login",
   data() {
@@ -125,6 +122,7 @@ export default {
             .then((res) => {
               setToken(res.result.token);
               setUserInfo(res.result.userInfo);
+              console.log(res.result.userInfo);
               setUserId(res.result.userInfo.id);
               this.$router.push({ path: "/" });
               this.loading = false;

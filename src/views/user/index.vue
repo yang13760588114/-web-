@@ -5,8 +5,22 @@
 </template>
 
 <script>
+import { getUserInfo } from "@/utils/auth";
 export default {
   name: "Dashboard",
+  data() {
+    return {
+      userInfo: null,
+    };
+  },
+  methods: {
+    mountUserInfo() {
+      this.userInfo = getUserInfo();
+    },
+  },
+  created() {
+    this.mountUserInfo();
+  },
 };
 </script>
 
