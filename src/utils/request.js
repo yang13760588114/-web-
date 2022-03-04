@@ -12,7 +12,7 @@ const service = axios.create({
     // withCredentials 未 true 时不允许 access-control-allow-origin 为 *
     "Access-Control-Allow-Origin": "http://127.0.0.1:10000",
   },
-  timeout: 5000, // request timeout
+  timeout: 500000, // request timeout
 });
 
 // 错误消息
