@@ -106,7 +106,7 @@ export default {
   methods: {
     // 跳转更新密码路由
     updatePwd() {
-      this.$router.push({ path: "/updatePwd" });
+      this.$router.push("/updatePwd");
     },
     // 设置密码旁边的图标
     showPwd() {

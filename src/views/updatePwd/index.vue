@@ -52,7 +52,7 @@
       >
         Login
       </el-button>
-      <a class="forget" @click.prevent="updatePwd">返回</a>
+      <a class="forget" @click.prevent="returnLogin()">返回</a>
     </el-form>
   </div>
 </template>
@@ -104,6 +104,9 @@ export default {
     },
   },
   methods: {
+    returnLogin() {
+      this.$router.push("/login");
+    },
     // 设置密码旁边的图标
     showPwd() {
       if (this.passwordType === "password") {
