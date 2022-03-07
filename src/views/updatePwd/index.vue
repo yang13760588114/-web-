@@ -9,7 +9,7 @@
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">智能商用鱼缸远程监测和控制软件设计</h3>
+        <h3 class="title">更新密码</h3>
       </div>
       <el-form-item prop="account">
         <span class="svg-container">
@@ -52,7 +52,7 @@
       >
         Login
       </el-button>
-      <a class="forget" @click.prevent="updatePwd">忘记密码?</a>
+      <a class="forget" @click.prevent="updatePwd">返回</a>
     </el-form>
   </div>
 </template>
@@ -104,10 +104,6 @@ export default {
     },
   },
   methods: {
-    // 跳转更新密码路由
-    updatePwd() {
-      this.$router.push({ path: "/updatePwd" });
-    },
     // 设置密码旁边的图标
     showPwd() {
       if (this.passwordType === "password") {

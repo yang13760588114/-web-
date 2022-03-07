@@ -12,6 +12,11 @@ export const constantRoutes = [
     hidden: true,
   },
   {
+    path: "/updatePwd",
+    component: () => import("@/views/updatePwd/index"),
+    hidden: true,
+  },
+  {
     path: "/404",
     component: () => import("@/views/404"),
     hidden: true,
