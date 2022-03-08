@@ -4,7 +4,7 @@ export function login(data) {
   return request({
     url: "/user/login",
     method: "post",
-    data,
+    data: data,
   });
 }
 
@@ -20,5 +20,21 @@ export function logout() {
   return request({
     url: "/user/logout",
     method: "post",
+  });
+}
+
+export function updatePwd(updatePwdBean) {
+  return request({
+    url: "/user/updatePwd",
+    method: "post",
+    data: updatePwdBean,
+  });
+}
+
+export function sendCaptcha(email) {
+  return request({
+    url: "/tool/mail/send",
+    method: "get",
+    params: { email: email },
   });
 }

@@ -1,42 +1,37 @@
 <template>
   <div class="login-container">
     <el-form
-      ref="loginForm"
-      :model="loginForm"
       :rules="loginRules"
+      :model="updatePwdForm"
       class="login-form"
-      auto-complete="on"
-      label-position="left"
+      auto-complete="false"
+      label-position="right"
     >
       <div class="title-container">
         <h3 class="title">更新密码</h3>
       </div>
-      <el-form-item prop="account">
+      <!-- 账号 -->
+      <el-form-item prop="username">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
         <el-input
-          ref="account"
-          v-model="loginForm.account"
-          placeholder="account(admin)"
-          name="account"
+          v-model="updatePwdForm.username"
+          placeholder="账号"
           type="text"
           tabindex="1"
         />
       </el-form-item>
-      <el-form-item prop="password">
+      <el-form-item prop="newPwd">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
         <el-input
           :key="passwordType"
-          ref="password"
-          v-model="loginForm.password"
+          v-model="updatePwdForm.newPwd"
           :type="passwordType"
-          placeholder="Password(123456)"
-          name="password"
+          placeholder="新密码"
           tabindex="2"
-          @keyup.enter.native="handleLogin"
         />
         <span class="show-pwd" @click="showPwd">
           <svg-icon
@@ -44,23 +39,70 @@
           />
         </span>
       </el-form-item>
+      <!-- 确认密码 -->
+      <el-form-item prop="confirmPwd">
+        <span class="svg-container">
+          <svg-icon icon-class="password" />
+        </span>
+        <el-input
+          :key="passwordType"
+          v-model="updatePwdForm.confirmPwd"
+          :type="passwordType"
+          placeholder="确认密码"
+          tabindex="3"
+        />
+        <span class="show-pwd" @click="showPwd">
+          <svg-icon
+            :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
+          />
+        </span>
+      </el-form-item>
+      <!-- email -->
+      <el-form-item prop="email">
+        <span class="svg-container">
+          <i class="el-icon-message"></i>
+        </span>
+        <el-input
+          :key="passwordType"
+          ref="password"
+          v-model="updatePwdForm.email"
+          type="text"
+          placeholder="邮箱"
+          tabindex="4"
+        />
+        <span class="show-pwd" @click.prevent="send">
+          <i class="el-icon-position"></i>
+        </span>
+      </el-form-item>
+      <!-- 验证码 -->
+      <el-form-item prop="captcha">
+        <span class="svg-container">
+          <i class="el-icon-chat-dot-square"></i>
+        </span>
+        <el-input
+          :key="passwordType"
+          ref="password"
+          v-model="updatePwdForm.captcha"
+          type="text"
+          placeholder="验证码"
+          tabindex="5"
+        />
+      </el-form-item>
       <el-button
         :loading="loading"
         type="primary"
         style="width: 100%; margin-bottom: 30px"
-        @click.native.prevent="handleLogin"
+        @click.native.prevent="handleUpdatePwd"
       >
-        Login
+        确认修改
       </el-button>
-      <a class="forget" @click.prevent="returnLogin()">返回</a>
+      <a class="forget" @click.prevent="returnLogin">返回</a>
     </el-form>
   </div>
 </template>
 
 <script>
-import { login } from "@/api/user";
-import { setToken, setUserId, setUserInfo } from "@/utils/auth";
-import { sleep } from "@/utils/Sleep";
+import { updatePwd, sendCaptcha } from "@/api/user";
 export default {
   name: "Login",
   data() {
@@ -79,9 +121,12 @@ export default {
       }
     };
     return {
-      loginForm: {
-        account: "admin",
-        password: "123456",
+      updatePwdForm: {
+        username: "",
+        newPwd: "",
+        confirmPwd: "",
+        email: "",
+        captcha: "",
       },
       loginRules: {
         account: [
@@ -104,6 +149,22 @@ export default {
     },
   },
   methods: {
+    send() {
+      const mail = this.updatePwdForm.email;
+      if (mail == "" || mail.length <= 0) {
+        this.$message({
+          type: "error",
+          message: "邮箱不能为空",
+        });
+        return;
+      }
+      sendCaptcha(mail).then((res) => {
+        this.$message({
+          type: "success",
+          message: res.result,
+        });
+      });
+    },
     returnLogin() {
       this.$router.push("/login");
     },
@@ -118,26 +179,8 @@ export default {
         this.$refs.password.focus();
       });
     },
-    handleLogin() {
-      this.$refs.loginForm.validate((valid) => {
-        if (valid) {
-          this.loading = true;
-          sleep(500);
-          login(this.loginForm)
-            .then((res) => {
-              setToken(res.result.token);
-              setUserInfo(res.result.userInfo);
-              setUserId(res.result.userInfo.id);
-              this.$router.push({ path: "/" });
-              this.loading = false;
-            })
-            .catch(() => {
-              this.loading = false;
-            });
-        } else {
-          return false;
-        }
-      });
+    handleUpdatePwd() {
+      alert(1);
     },
   },
 };
