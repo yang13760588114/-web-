@@ -39,7 +39,7 @@ export default {
       const first = matched[0];
 
       if (!this.isDashboard(first)) {
-        matched = [{ path: "/", meta: { title: "跳转历史" } }].concat(matched);
+        matched = [{ path: "/", meta: { title: "导航栏" } }].concat(matched);
       }
 
       this.levelList = matched.filter(
