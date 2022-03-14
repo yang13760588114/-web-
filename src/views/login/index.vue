@@ -9,7 +9,7 @@
       label-position="left"
     >
       <div class="title-container">
-        <h3 class="title">智能商用鱼缸远程监测和控制软件设计</h3>
+        <h3 class="title">智能商用鱼缸远程监测和控制软件</h3>
       </div>
       <el-form-item prop="account">
         <span class="svg-container">
@@ -50,7 +50,7 @@
         style="width: 100%; margin-bottom: 30px"
         @click.native.prevent="handleLogin"
       >
-        Login
+        登 陆
       </el-button>
       <a class="forget" @click.prevent="updatePwd">忘记密码?</a>
     </el-form>
@@ -145,13 +145,13 @@ export default {
 </script>
 
 <style lang="scss">
-$bg: #283443;
+$bg: #424447;
 $light_gray: #fff;
 $cursor: #fff;
 
 .forget {
   float: right;
-  color: blue;
+  color: black;
 }
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {

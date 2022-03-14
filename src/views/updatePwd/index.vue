@@ -199,7 +199,7 @@ $cursor: #fff;
 
 .forget {
   float: right;
-  color: blue;
+  color: black;
 }
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
