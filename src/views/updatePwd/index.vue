@@ -180,7 +180,13 @@ export default {
       });
     },
     handleUpdatePwd() {
-      alert(1);
+      updatePwd(this.updatePwdForm).then((res) => {
+        this.$message({
+          type: "success",
+          message: res.result,
+        });
+        this.$router.push("/login");
+      });
     },
   },
 };

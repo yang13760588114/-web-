@@ -104,9 +104,10 @@ export default {
       ],
     });
     // 没有返回值的函数不要加"()"
+    this.showRealTimeRecords();
     setInterval(() => {
       this.showRealTimeRecords();
-    }, 1000);
+    }, 10000);
   },
 };
 </script>
