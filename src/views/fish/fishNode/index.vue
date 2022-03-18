@@ -189,7 +189,7 @@ export default {
           this.listNodes();
           this.$message({
             type: "success",
-            message: "更新成功!",
+            message: "创建成功!",
           });
         } else {
           this.$message({
