@@ -2,7 +2,8 @@ import request from "@/utils/request";
 
 export function realTimeRecords(nodeId) {
   return request({
-    url: `/record/node/${nodeId}`,
+    url: `/record/node`,
+    params: { nodeId },
     method: "get",
   });
 }
