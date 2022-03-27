@@ -38,7 +38,7 @@ export default {
   data() {
     return {
       // flagNames
-      flagNames: ["除菌器", "加热器", "灯光"],
+      flagNames: ["除菌器", "自动加热", "灯光"],
       // 除菌器
       degerming: false,
       // 加热器
