@@ -24,72 +24,76 @@ export const constantRoutes = [
   {
     path: "/",
     component: Layout,
-    redirect: "/user",
+    redirect: "/real-time-record",
+    meta: { title: "记录数据", icon: "el-icon-data-line" },
+    children: [
+      {
+        path: "/real-time-record",
+        name: "RealTimeRecord",
+        component: () => import("@/views/record/realTime/index"),
+        meta: {
+          title: "鱼缸节点监测和控制",
+          icon: "el-icon-view",
+          noCache: true,
+        },
+      },
+    ],
+  },
+  {
+    path: "/",
+    component: Layout,
+    redirect: "/node",
+    meta: { title: "记录数据", icon: "el-icon-data-line" },
+    children: [
+      {
+        path: "/node/info",
+        name: "NodeInfo",
+        component: () => import("@/views/fish/fishNode/index"),
+        meta: {
+          title: "鱼缸信息",
+          icon: "yu2",
+          noCache: true,
+        },
+      },
+    ],
+  },
+  {
+    path: "/history",
+    component: Layout,
+    meta: { title: "历史记录", icon: "el-icon-data-line" },
+    children: [
+      {
+        path: "/history/records",
+        name: "HistoryRecords",
+        component: () => import("@/views/record/history/index"),
+        meta: { title: "监测记录", icon: "el-icon-view", noCache: true },
+      },
+      {
+        path: "/history/commands",
+        name: "HistoryCommands",
+        component: () => import("@/views/command/index"),
+        meta: { title: "控制日志", icon: "el-icon-receiving", noCache: true },
+      },
+    ],
+  },
+  {
+    path: "/user",
+    component: Layout,
+    meta: { title: "用户管理", icon: "el-icon-user" },
     children: [
       {
         path: "user",
         name: "User",
         component: () => import("@/views/user/index"),
-        meta: { title: "用户信息", icon: "el-icon-user" },
+        meta: { title: "用户信息", icon: "el-icon-s-custom" },
         noCache: true,
       },
-    ],
-  },
-  {
-    path: "/fish",
-    component: Layout,
-    redirect: "/fish/node",
-    meta: { title: "鱼缸信息", icon: "el-icon-wallet" },
-    children: [
       {
-        path: "/fish/node",
-        name: "FishNode",
-        component: () => import("@/views/fish/fishNode/index"),
-        meta: {
-          title: "鱼缸信息",
-          icon: "el-icon-takeaway-box",
-          noCache: true,
-        },
-      },
-      {
-        path: "/fish/info",
-        name: "FishInfo",
-        component: () => import("@/views/fish/fishInfo/index"),
-        meta: { title: "养鱼信息", icon: "yu2", noCache: true },
-      },
-    ],
-  },
-  {
-    path: "/record",
-    component: Layout,
-    meta: { title: "记录数据", icon: "el-icon-data-line" },
-    children: [
-      {
-        path: "/record/realTime",
-        name: "RealTimeRecord",
-        component: () => import("@/views/record/realTime/index"),
-        meta: { title: "实时记录", icon: "el-icon-view", noCache: true },
-      },
-      {
-        path: "/record/history",
-        name: "HistoryRecord",
-        component: () => import("@/views/record/history/index"),
-        meta: { title: "历史记录", icon: "el-icon-receiving", noCache: true },
-      },
-    ],
-  },
-  {
-    path: "/command",
-    component: Layout,
-    redirect: "/command/record",
-    name: "Command",
-    meta: { title: "控制命令", icon: "nested" },
-    children: [
-      {
-        path: "/command/record",
-        name: "CommandRecord",
-        component: () => import("@/views/command/index"),
-        meta: { title: "控制命令", icon: "el-icon-receiving", noCache: true },
+        path: "update-pwd",
+        name: "updatePwd",
+        component: () => import("@/views/user/index"),
+        meta: { title: "修改密码", icon: "el-icon-chat-dot-round" },
+        noCache: true,
       },
     ],
   },
