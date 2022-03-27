@@ -1,16 +1,20 @@
 <template>
   <div>
     <el-container class="container">
-      <el-header> <svg-icon icon-class="yugang" /> {{ nodeName }}</el-header>
+      <el-header>
+        <svg-icon icon-class="yugang" />
+        {{ node.name }}-{{ node.location }}-{{ node.description }}
+      </el-header>
       <el-container>
         <el-aside width="200px">
+          <div>实时温度: {{ latestTemperature }} °C</div>
           <statusFlag :name="flagNames[0]" :flag="degerming" />
           <statusFlag :name="flagNames[1]" :flag="heater" />
           <statusFlag :name="flagNames[2]" :flag="light" />
         </el-aside>
         <el-main>
           <div
-            :id="'nodeId' + nodeId"
+            :id="'nodeId' + node.id"
             style="width: 600px; height: 400px"
           ></div>
         </el-main>
@@ -29,8 +33,7 @@ export default {
   name: "nodeInfo",
   components: { statusFlag },
   props: {
-    nodeId: Number,
-    nodeName: String,
+    node: { id: Number, name: String, location: String, description: String },
   },
   data() {
     return {
@@ -42,12 +45,13 @@ export default {
       heater: false,
       // 灯光
       light: false,
+      latestTemperature: null,
       chart: {},
     };
   },
   methods: {
     showRealTimeRecords() {
-      const record = realTimeRecords(this.nodeId);
+      const record = realTimeRecords(this.node.id);
       record
         .then((res) => {
           // 除菌器
@@ -56,6 +60,8 @@ export default {
           this.heater = setBooleanValue(res.result.heater);
           // 灯光
           this.light = setBooleanValue(res.result.light);
+          // 最新温度
+          this.latestTemperature = res.result.temperature;
           // 折线图数据: 温度, 时间
           this.chart.setOption({
             xAxis: {
@@ -79,7 +85,7 @@ export default {
   },
   mounted() {
     // 基于准备好的dom，初始化echarts实例
-    this.chart = echarts.init(document.getElementById("nodeId" + this.nodeId));
+    this.chart = echarts.init(document.getElementById("nodeId" + this.node.id));
     // 绘制图表
     this.chart.setOption({
       title: {
@@ -103,11 +109,10 @@ export default {
         },
       ],
     });
-    // 没有返回值的函数不要加"()"
     this.showRealTimeRecords();
     setInterval(() => {
       this.showRealTimeRecords();
-    }, 10000);
+    }, 3000);
   },
 };
 </script>

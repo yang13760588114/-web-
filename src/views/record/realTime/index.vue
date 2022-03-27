@@ -1,7 +1,7 @@
 <template>
   <div>
     <p v-for="node in nodeList" :key="node.id">
-      <nodeInfo :nodeId="node.id" :nodeName="node.name" />
+      <nodeInfo :node="node" />
     </p>
   </div>
 </template>
