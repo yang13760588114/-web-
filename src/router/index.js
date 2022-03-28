@@ -51,7 +51,7 @@ export const constantRoutes = [
         component: () => import("@/views/fish/fishNode/index"),
         meta: {
           title: "鱼缸信息",
-          icon: "yu2",
+          icon: "线性鱼缸",
           noCache: true,
         },
       },
@@ -92,7 +92,7 @@ export const constantRoutes = [
         path: "update-pwd",
         name: "updatePwd",
         component: () => import("@/views/user/index"),
-        meta: { title: "修改密码", icon: "el-icon-chat-dot-round" },
+        meta: { title: "修改密码", icon: "忘记密码" },
         noCache: true,
       },
     ],
