@@ -40,7 +40,7 @@ export const constantRoutes = [
     ],
   },
   {
-    path: "/",
+    path: "/node",
     component: Layout,
     redirect: "/node",
     meta: { title: "记录数据", icon: "el-icon-data-line" },
