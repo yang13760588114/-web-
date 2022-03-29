@@ -8,15 +8,12 @@
       <el-container>
         <el-aside width="200px">
           <div>实时温度: {{ latestTemperature }} °C</div>
-          <statusFlag :name="flagNames[0]" :flag="degerming" />
-          <statusFlag :name="flagNames[1]" :flag="heater" />
-          <statusFlag :name="flagNames[2]" :flag="light" />
+          <statusFlag :name="'除菌器'" :flag="degerming" />
+          <statusFlag :name="'自动加热'" :flag="heater" />
+          <statusFlag :name="'灯光'" :flag="light" />
         </el-aside>
         <el-main>
-          <div
-            :id="'nodeId' + node.id"
-            style="width: 600px; height: 400px"
-          ></div>
+          <chart :options="orgOptions" :auto-resize="true" />
         </el-main>
       </el-container>
     </el-container>
@@ -37,8 +34,7 @@ export default {
   },
   data() {
     return {
-      // flagNames
-      flagNames: ["除菌器", "自动加热", "灯光"],
+      orgOptions: {},
       // 除菌器
       degerming: false,
       // 加热器
@@ -84,6 +80,22 @@ export default {
     },
   },
   mounted() {
+    this.orgOptions = {
+      xAxis: {
+        type: "category",
+        data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      },
+      yAxis: {
+        type: "value",
+      },
+      series: [
+        {
+          data: [820, 932, 901, 934, 1290, 1330, 1320],
+          type: "line",
+          smooth: true,
+        },
+      ],
+    };
     // 基于准备好的dom，初始化echarts实例
     this.chart = echarts.init(document.getElementById("nodeId" + this.node.id));
     // 绘制图表
