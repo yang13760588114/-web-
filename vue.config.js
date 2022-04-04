@@ -6,7 +6,7 @@ function resolve(dir) {
   return path.join(__dirname, dir);
 }
 
-const name = defaultSettings.title || "vue Admin Template"; // page title
+const name = defaultSettings.title || "智能鱼缸软件系统"; // page title
 
 const port = 80; // dev port
 
@@ -32,6 +32,18 @@ module.exports = {
       errors: true,
     },
     before: require("./mock/mock-server.js"),
+    proxy: {
+      "/socket.io": {
+        target: "http://localhost:10000",
+        ws: true,
+        changeOrigin: true,
+      },
+      "sockjs-node": {
+        target: "http://localhost:10000",
+        ws: false,
+        changeOrigin: true,
+      },
+    },
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that

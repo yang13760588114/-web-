@@ -24,7 +24,6 @@
 import { realTimeRecords } from "@/api/record";
 import statusFlag from "@/components/statusFlag";
 import { setBooleanValue } from "@/utils/value";
-import VueSocketIO from "vue-socket.io";
 
 export default {
   name: "nodeInfo",
@@ -34,7 +33,6 @@ export default {
   },
   data() {
     return {
-      socket: null,
       orgOptions: {
         title: {
           text: "实时温度",
@@ -66,14 +64,6 @@ export default {
     };
   },
   methods: {
-    connect() {
-      // 开始连接socket
-      this.$socket.open();
-      // 订阅事件
-      this.sockets.subscribe("welcome", (data) => {
-        console.log("welcome data ", data);
-      });
-    },
     showRealTimeRecords() {
       const record = realTimeRecords(this.node.id);
       record
@@ -98,15 +88,10 @@ export default {
     },
   },
   created() {
-    this.socket = new VueSocketIO({
-      debug: true,
-      // 服务器端地址
-      connection: `ws://localhost:10000/znyg/ws/{node.id}`,
-    });
-    // this.showRealTimeRecords();
-    // setInterval(() => {
-    //   this.showRealTimeRecords();
-    // }, 1000);
+    this.showRealTimeRecords();
+    setInterval(() => {
+      this.showRealTimeRecords();
+    }, 3000);
   },
 };
 </script>
