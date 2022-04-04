@@ -20,6 +20,8 @@ if (process.env.NODE_ENV === "production") {
   mockXHR();
 }
 
+Vue.config.productionTip = false;
+
 // 注册全局组件 chart
 import ECharts from "vue-echarts";
 import "echarts/lib/chart/line";
