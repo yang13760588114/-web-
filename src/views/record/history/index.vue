@@ -3,15 +3,18 @@
     <!-- 不知道为什么直接写 css 总是无效... -->
     <div class="header">
       <div class="items">
+        <!-- 日期选择器 -->
         <el-date-picker
           v-model="queryTime"
           type="daterange"
           range-separator="~"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          :clearable="clearable"
           value-format="yyyy-MM-dd"
         >
         </el-date-picker>
+        <!-- 鱼缸选择下拉框 -->
         <el-dropdown
           trigger="click"
           split-button
@@ -54,10 +57,13 @@
       <el-table-column prop="nodeName" label="鱼缸节点" width="150" />
       <el-table-column label="监测数据" width="720">
         <el-table-column prop="recordTime" label="时间" width="180" />
-        <el-table-column prop="temperature" label="温度" width="180" />
-        <el-table-column prop="degermingStatus" label="除菌器" width="180" />
-        <el-table-column prop="lightStatus" label="灯光" width="180" />
-        <el-table-column prop="heaterStatus" label="加热器" width="180" />
+        <el-table-column prop="temperature" label="温度/°C" width="90" />
+        <el-table-column prop="upperLimit" label="温度上限/°C" width="100" />
+        <el-table-column prop="lowerLimit" label="温度下限/°C" width="100" />
+        <el-table-column prop="heaterAutoStatus" label="自动加热" width="90" />
+        <el-table-column prop="degermingStatus" label="除菌器" width="90" />
+        <el-table-column prop="lightStatus" label="灯光" width="90" />
+        <el-table-column prop="heaterStatus" label="加热器" width="90" />
         <el-table-column label="操作" prop="id">
           <template slot-scope="scope">
             <el-button
@@ -94,9 +100,10 @@ import { listFishNode } from "@/api/fish";
 export default {
   data() {
     return {
+      clearable: false,
       nodes: [],
       tableData: [],
-      queryTime: [],
+      queryTime: null,
       count: 0,
       totalPage: 0,
       dropdownItemName: "鱼缸选择",
@@ -117,17 +124,27 @@ export default {
     handleCommand(node) {
       this.request.nodeId = node.id;
       this.dropdownItemName = node.name;
+      this.pageRecord(this.request);
     },
+    // 清除查询请求的参数
     clear() {
       this.request.nodeId = null;
       this.dropdownItemName = "鱼缸选择";
+      this.pageRecord(this.request);
+      this.queryTime = null;
     },
     search() {
-      if (this.queryTime[0] !== null) {
-        this.request.startTime = this.queryTime[0];
-      }
-      if (this.queryTime[1] !== null) {
-        this.request.endTime = this.queryTime[1];
+      if (this.queryTime !== null) {
+        // 开始时间
+        const startTime = this.queryTime[0];
+        if (startTime !== null) {
+          this.request.startTime = startTime;
+        }
+        // 结束时间
+        const endTime = this.queryTime[1];
+        if (endTime !== null) {
+          this.request.endTime = endTime;
+        }
       }
       this.pageRecord(this.request);
     },
