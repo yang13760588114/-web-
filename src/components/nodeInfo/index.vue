@@ -8,8 +8,8 @@
       <el-container>
         <el-aside width="200px">
           <div>实时温度: {{ latestTemperature }} °C</div>
-          <statusFlag :name="'除菌器'" :flag="degerming" />
           <statusFlag :name="'自动加热'" :flag="heater" />
+          <statusFlag :name="'除菌器'" :flag="degerming" />
           <statusFlag :name="'灯光'" :flag="light" />
         </el-aside>
         <el-main>
@@ -61,6 +61,7 @@ export default {
       // 灯光
       light: false,
       latestTemperature: null,
+      timer: null,
     };
   },
   methods: {
@@ -89,9 +90,14 @@ export default {
   },
   created() {
     this.showRealTimeRecords();
-    setInterval(() => {
+    this.timer = setInterval(() => {
       this.showRealTimeRecords();
     }, 3000);
+  },
+  beforeDestroy() {
+    // 删除定时器
+    clearInterval(this.timer);
+    this.timer = null;
   },
 };
 </script>
