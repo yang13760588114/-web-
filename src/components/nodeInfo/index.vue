@@ -11,12 +11,33 @@
           <statusFlag :name="'自动加热'" :flag="heater" />
           <statusFlag :name="'除菌器'" :flag="degerming" />
           <statusFlag :name="'灯光'" :flag="light" />
+          <div>温度范围: {{ value[0] / 10 }}°C ~ {{ value[1] / 10 }}°C</div>
+          <el-button type="warning" @click="setLimit = true">
+            设置温度
+          </el-button>
         </el-aside>
         <el-main>
           <chart :options="orgOptions" :auto-resize="true" />
         </el-main>
       </el-container>
     </el-container>
+    <!-- 设置温度上下限的弹窗 -->
+    <el-dialog title="收货地址" :visible.sync="setLimit">
+      <el-slider
+        v-model="value"
+        range
+        :marks="marks"
+        :min="50"
+        :max="400"
+        :format-tooltip="formatTooltip"
+      />
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="setLimit = false">取 消</el-button>
+        <el-button type="primary" @click="saveOrUpdateLimit(value)">
+          确 定
+        </el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -34,6 +55,19 @@ export default {
   },
   data() {
     return {
+      // 滑块数据
+      value: [200, 250],
+      marks: {
+        140: "14°C",
+        250: "25°C",
+        370: "37°C",
+      },
+      setLimit: false,
+      setLimitRequest: {
+        nodeId: this.node.id,
+        up: Number,
+        low: Number,
+      },
       orgOptions: {
         title: {
           text: "实时温度",
@@ -83,6 +117,30 @@ export default {
     };
   },
   methods: {
+    formatTooltip(val) {
+      return val / 10;
+    },
+    getLimit(nodeId) {
+      getLimit(nodeId).then((res) => {
+        value[0] = res.data.temperatureLowerLimit * 10;
+        value[1] = res.data.temperatureUpperLimit * 10;
+      });
+    },
+    saveOrUpdateLimit(value) {
+      const setLimitRequest = {
+        nodeId: this.node.id,
+        temperatureUpperLimit: value[1] / 10,
+        temperatureLowerLimit: value[0] / 10,
+      };
+      saveOrUpdateLimit(setLimitRequest).then((res) => {
+        this.getLimit(this.node.id);
+        this.$message({
+          type: "success",
+          message: res.message,
+        });
+      });
+      this.setLimit = false;
+    },
     getLimit(nodeId) {
       getLimit(nodeId).then((res) => {
         console.log(res.result.temperatureUpperLimit);
@@ -112,6 +170,7 @@ export default {
     },
   },
   created() {
+    this.getLimit(this.node.id);
     this.showRealTimeRecords();
     this.timer = setInterval(() => {
       this.showRealTimeRecords();
