@@ -24,6 +24,7 @@
 import { realTimeRecords } from "@/api/record";
 import statusFlag from "@/components/statusFlag";
 import { setBooleanValue } from "@/utils/value";
+import { getLimit, saveOrUpdateLimit } from "@/api/limit";
 
 export default {
   name: "nodeInfo",
@@ -46,9 +47,26 @@ export default {
           name: "温度",
           type: "value",
         },
+        visualMap: [
+          {
+            pieces: [
+              {
+                gte: 25.3, // 没有设置最小值，表明当前范围 [-Infinity, max] 变色
+                color: "red",
+              },
+              {
+                lte: 11.1, // 没有设置最大值，表明当前范围 [min, Infinity] 变色
+                color: "blue",
+              },
+            ],
+            outOfRange: {
+              // 在选中范围外 的视觉元素，这里设置在正常范围内的图形颜色
+              color: "green",
+            },
+          },
+        ],
         series: [
           {
-            name: "记录时间",
             data: [],
             type: "line",
           },
@@ -65,6 +83,11 @@ export default {
     };
   },
   methods: {
+    getLimit(nodeId) {
+      getLimit(nodeId).then((res) => {
+        console.log(res.result.temperatureUpperLimit);
+      });
+    },
     showRealTimeRecords() {
       const record = realTimeRecords(this.node.id);
       record
@@ -93,6 +116,7 @@ export default {
     this.timer = setInterval(() => {
       this.showRealTimeRecords();
     }, 3000);
+    this.getLimit(this.node.id);
   },
   beforeDestroy() {
     // 删除定时器
