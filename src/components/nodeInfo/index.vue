@@ -9,14 +9,17 @@
         <el-aside width="250px" class="aside">
           <div>实时温度: {{ latestTemperature }} °C</div>
           <div>温度范围: {{ value[0] / 10 }}°C ~ {{ value[1] / 10 }}°C</div>
+          <div>
+            加热器状态: <el-tag :type="type" size="mini">{{ heater }}</el-tag>
+          </div>
         </el-aside>
         <el-main>
           <chart :options="orgOptions" :auto-resize="true" />
         </el-main>
         <el-aside width="250px" class="aside">
-          <statusFlag :name="'自动加热'" :flag="heater" />
-          <statusFlag :name="'除菌器'" :flag="degerming" />
-          <statusFlag :name="'灯光'" :flag="light" />
+          <statusFlag :name="'自动加热'" />
+          <statusFlag :name="'除菌器'" />
+          <statusFlag :name="'灯光'" />
           <el-button type="warning" @click="setLimit = true">
             设置温度
           </el-button>
@@ -46,8 +49,8 @@
 <script>
 import { realTimeRecords } from "@/api/record";
 import statusFlag from "@/components/statusFlag";
-import { setBooleanValue } from "@/utils/value";
 import { getLimit, saveOrUpdateLimit } from "@/api/limit";
+import { getCommand } from "@/api/command";
 
 export default {
   name: "nodeInfo",
@@ -57,6 +60,7 @@ export default {
   },
   data() {
     return {
+      type: "info",
       // 滑块数据
       value: [200, 250],
       marks: {
@@ -108,12 +112,8 @@ export default {
           },
         ],
       },
-      // 除菌器
-      degerming: false,
       // 加热器
-      heater: false,
-      // 灯光
-      light: false,
+      heater: "关闭",
       latestTemperature: null,
       timer: null,
     };
@@ -136,10 +136,22 @@ export default {
       };
       saveOrUpdateLimit(setLimitRequest).then((res) => {
         this.getLimit(this.node.id);
-        this.$message({
-          type: "success",
-          message: res.message,
-        });
+        const val = res.result;
+        setTimeout(() => {
+          getCommand(val).then((res) => {
+            if (res.result == 2) {
+              this.$message({
+                type: "success",
+                message: "执行成功",
+              });
+            } else {
+              this.$message({
+                type: "error",
+                message: "控制命令执行失败，请重新执行",
+              });
+            }
+          });
+        }, 6000);
       });
       this.setLimit = false;
     },
@@ -147,12 +159,14 @@ export default {
       const record = realTimeRecords(this.node.id);
       record
         .then((res) => {
-          // 除菌器
-          this.degerming = setBooleanValue(res.result.degerming);
           // 加热器
-          this.heater = setBooleanValue(res.result.heater);
-          // 灯光
-          this.light = setBooleanValue(res.result.light);
+          const text = res.result.heaterStatusText;
+          this.heater = text;
+          if (text == "开启") {
+            this.type = "success";
+          } else {
+            this.type = "info";
+          }
           // 最新温度
           this.latestTemperature = res.result.temperature;
           this.orgOptions.xAxis.data = res.result.dates;

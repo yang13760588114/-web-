@@ -7,6 +7,13 @@ export function getCommandRecord() {
   });
 }
 
+export function getCommand(id) {
+  return request({
+    url: `/command/get/${id}`,
+    method: "get",
+  });
+}
+
 export function removeCommand(recordId) {
   return request({
     url: `/command/remove/${recordId}`,

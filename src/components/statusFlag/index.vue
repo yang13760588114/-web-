@@ -9,7 +9,20 @@
 export default {
   props: {
     name: String,
-    flag: Boolean,
+  },
+  data() {
+    return {
+      flag: false,
+    };
+  },
+  watch: {
+    flag: {
+      handler(flag) {
+        if (flag) {
+          console.log("开启");
+        }
+      },
+    },
   },
 };
 </script>
