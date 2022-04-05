@@ -17,9 +17,9 @@
           <chart :options="orgOptions" :auto-resize="true" />
         </el-main>
         <el-aside width="250px" class="aside">
-          <statusFlag :name="'自动加热'" />
-          <statusFlag :name="'除菌器'" />
-          <statusFlag :name="'灯光'" />
+          <statusFlag :name="'自动加热'" :nodeId="this.node.id" obj="J" />
+          <statusFlag :name="'除菌器'" :nodeId="this.node.id" obj="C" />
+          <statusFlag :name="'灯光'" :nodeId="this.node.id" obj="D" />
           <el-button type="warning" @click="setLimit = true">
             设置温度
           </el-button>

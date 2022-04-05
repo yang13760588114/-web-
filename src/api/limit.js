@@ -16,3 +16,11 @@ export function saveOrUpdateLimit(limitRequest) {
     method: "post",
   });
 }
+
+export function updateStatus(command) {
+  return request({
+    url: "/limit/command",
+    data: command,
+    method: "post",
+  });
+}
