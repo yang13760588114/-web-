@@ -6,19 +6,21 @@
         {{ node.name }}-{{ node.location }}-{{ node.description }}
       </el-header>
       <el-container>
-        <el-aside width="200px">
+        <el-aside width="250px" class="aside">
           <div>实时温度: {{ latestTemperature }} °C</div>
-          <statusFlag :name="'自动加热'" :flag="heater" />
-          <statusFlag :name="'除菌器'" :flag="degerming" />
-          <statusFlag :name="'灯光'" :flag="light" />
           <div>温度范围: {{ value[0] / 10 }}°C ~ {{ value[1] / 10 }}°C</div>
-          <el-button type="warning" @click="setLimit = true">
-            设置温度
-          </el-button>
         </el-aside>
         <el-main>
           <chart :options="orgOptions" :auto-resize="true" />
         </el-main>
+        <el-aside width="250px" class="aside">
+          <statusFlag :name="'自动加热'" :flag="heater" />
+          <statusFlag :name="'除菌器'" :flag="degerming" />
+          <statusFlag :name="'灯光'" :flag="light" />
+          <el-button type="warning" @click="setLimit = true">
+            设置温度
+          </el-button>
+        </el-aside>
       </el-container>
     </el-container>
     <!-- 设置温度上下限的弹窗 -->
@@ -122,8 +124,8 @@ export default {
     },
     getLimit(nodeId) {
       getLimit(nodeId).then((res) => {
-        value[0] = res.data.temperatureLowerLimit * 10;
-        value[1] = res.data.temperatureUpperLimit * 10;
+        this.value[0] = res.result.temperatureLowerLimit * 10;
+        this.value[1] = res.result.temperatureUpperLimit * 10;
       });
     },
     saveOrUpdateLimit(value) {
@@ -140,11 +142,6 @@ export default {
         });
       });
       this.setLimit = false;
-    },
-    getLimit(nodeId) {
-      getLimit(nodeId).then((res) => {
-        console.log(res.result.temperatureUpperLimit);
-      });
     },
     showRealTimeRecords() {
       const record = realTimeRecords(this.node.id);
@@ -186,6 +183,9 @@ export default {
 </script>
 
 <style scoped>
+.aside {
+  padding: 10px;
+}
 .el-header,
 .el-footer {
   background-color: #b3c0d1;
