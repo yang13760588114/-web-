@@ -72,13 +72,11 @@
 
 <script>
 import { realTimeRecords } from "@/api/record";
-import statusFlag from "@/components/statusFlag";
 import { getLimit, saveOrUpdateLimit, updateStatus } from "@/api/limit";
 import { getCommand } from "@/api/command";
 
 export default {
   name: "nodeInfo",
-  components: { statusFlag },
   props: {
     node: { id: Number, name: String, location: String, description: String },
   },
