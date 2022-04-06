@@ -23,7 +23,7 @@
               v-model="heaterStatus"
               active-text="开"
               inactive-text="关"
-              @change="changeStatus"
+              @change="changeHeaterStatus"
             />
           </div>
           <div>
@@ -32,7 +32,7 @@
               v-model="degermingStatus"
               active-text="开"
               inactive-text="关"
-              @change="changeStatus"
+              @change="changeDegermingStatus"
             />
           </div>
           <div>
@@ -41,7 +41,7 @@
               v-model="lightStatus"
               active-text="开"
               inactive-text="关"
-              @change="changeStatus"
+              @change="changeLightStatus"
             />
           </div>
           <el-button type="warning" @click="setLimit = true">
@@ -73,7 +73,7 @@
 <script>
 import { realTimeRecords } from "@/api/record";
 import statusFlag from "@/components/statusFlag";
-import { getLimit, saveOrUpdateLimit } from "@/api/limit";
+import { getLimit, saveOrUpdateLimit, updateStatus } from "@/api/limit";
 import { getCommand } from "@/api/command";
 
 export default {
@@ -139,7 +139,7 @@ export default {
           },
         ],
       },
-      // 加热器
+      // 加热器显示状态
       heater: "关闭",
       latestTemperature: null,
       timer: null,
@@ -210,13 +210,58 @@ export default {
           });
         });
     },
-    // 开关的回调的函数
-    changeStatus(val) {
-      if (val) {
-        // TODO
-      } else {
-        // TODO
+    // 封装修改状态方法
+    changeNodeStatus(obj, switchStatus) {
+      let status = 0;
+      if (switchStatus) {
+        status = 1;
       }
+      updateStatus({
+        nodeId: this.node.id,
+        commandObj: obj,
+        status: status,
+      }).then((res) => {
+        const id = res.result;
+        setTimeout(() => {
+          getCommand(id).then((res) => {
+            if (res.result == 2) {
+              this.$message({
+                type: "success",
+                message: "执行成功",
+              });
+            } else {
+              // 重制状态
+              switch (obj) {
+                case "J":
+                  this.heaterStatus = 0;
+                  break;
+                case "D":
+                  this.lightStatus = 0;
+                  break;
+                case "C":
+                  this.degermingStatus = 0;
+                  break;
+              }
+              this.$message({
+                type: "error",
+                message: "控制命令执行失败，请重新执行",
+              });
+            }
+          });
+        }, 6000);
+      });
+    },
+    // 加热器滑块事件
+    changeHeaterStatus(val) {
+      this.changeNodeStatus("J", val);
+    },
+    // 灯光滑块事件
+    changeLightStatus(val) {
+      this.changeNodeStatus("D", val);
+    },
+    // 除菌器滑块事件
+    changeDegermingStatus(val) {
+      this.changeNodeStatus("C", val);
     },
   },
   created() {
