@@ -17,9 +17,33 @@
           <chart :options="orgOptions" :auto-resize="true" />
         </el-main>
         <el-aside width="250px" class="aside">
-          <statusFlag :name="'自动加热'" :nodeId="this.node.id" obj="J" />
-          <statusFlag :name="'除菌器'" :nodeId="this.node.id" obj="C" />
-          <statusFlag :name="'灯光'" :nodeId="this.node.id" obj="D" />
+          <div>
+            自动加热
+            <el-switch
+              v-model="heaterStatus"
+              active-text="开"
+              inactive-text="关"
+              @change="changeStatus"
+            />
+          </div>
+          <div>
+            除菌器
+            <el-switch
+              v-model="degermingStatus"
+              active-text="开"
+              inactive-text="关"
+              @change="changeStatus"
+            />
+          </div>
+          <div>
+            灯光
+            <el-switch
+              v-model="lightStatus"
+              active-text="开"
+              inactive-text="关"
+              @change="changeStatus"
+            />
+          </div>
           <el-button type="warning" @click="setLimit = true">
             设置温度
           </el-button>
@@ -68,6 +92,9 @@ export default {
         250: "25°C",
         370: "37°C",
       },
+      heaterStatus: 0,
+      degermingStatus: 0,
+      lightStatus: 0,
       setLimit: false,
       setLimitRequest: {
         nodeId: this.node.id,
@@ -122,10 +149,14 @@ export default {
     formatTooltip(val) {
       return val / 10;
     },
+    // 获取鱼缸各值的状态
     getLimit(nodeId) {
       getLimit(nodeId).then((res) => {
         this.value[0] = res.result.temperatureLowerLimit * 10;
         this.value[1] = res.result.temperatureUpperLimit * 10;
+        this.heaterStatus = res.result.heater;
+        this.degermingStatus = res.result.degerming;
+        this.lightStatus = res.result.light;
       });
     },
     saveOrUpdateLimit(value) {
@@ -178,6 +209,14 @@ export default {
             message: res.message,
           });
         });
+    },
+    // 开关的回调的函数
+    changeStatus(val) {
+      if (val) {
+        // TODO
+      } else {
+        // TODO
+      }
     },
   },
   created() {
