@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-container">
     <div class="left">
-      <userCard :userInfo="userInfo" class="card"></userCard>
+      <userCard :userInfo="userInfo" class="card" />
       <div class="clock">{{ hour }}:{{ minute }}:{{ second }}</div>
     </div>
     <el-calendar class="calendar" v-model="date">

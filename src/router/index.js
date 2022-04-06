@@ -84,15 +84,8 @@ export const constantRoutes = [
       {
         path: "user",
         name: "User",
-        component: () => import("@/views/user/index"),
+        component: () => import("@/views/user/userInfo/index"),
         meta: { title: "用户信息", icon: "el-icon-s-custom" },
-        noCache: true,
-      },
-      {
-        path: "update-pwd",
-        name: "updatePwd",
-        component: () => import("@/views/user/index"),
-        meta: { title: "修改密码", icon: "忘记密码" },
         noCache: true,
       },
     ],
