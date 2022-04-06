@@ -1,173 +1,165 @@
 <template>
   <div>
-    <el-descriptions
-      class="margin-top"
-      title="控制命令状态"
-      :column="4"
-      style="margin: 30px"
-      border
-      :contentStyle="{ 'text-align': 'center' }"
-    >
-      <template slot="extra">
-        <el-button
-          type="primary"
-          size="small"
-          @click="drawer = true"
-          circle
-          icon="el-icon-plus"
-        />
-      </template>
-      <el-descriptions-item>
-        <template slot="label">
-          <svg-icon icon-class="yugang" />鱼缸编号
-        </template>
-        {{ command.nodeId }}
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-odometer"></i>
-          温度
-        </template>
-        {{ command.temperature }}
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-magic-stick"></i>
-          灯光
-        </template>
-        {{ command.light }}
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-wind-power"></i>
-          除菌器
-        </template>
-        {{ command.degerming }}
-      </el-descriptions-item>
-      <el-descriptions-item span="1">
-        <template slot="label">
-          <i class="el-icon-finished"></i>
-          执行状态
-        </template>
-        <el-tag :type="tagType">{{ command.commandStatusText }}</el-tag>
-      </el-descriptions-item>
-      <el-descriptions-item>
-        <template slot="label">
-          <i class="el-icon-chat-dot-square"></i>
-          命令文本
-        </template>
-        {{ command.commandText }}
-      </el-descriptions-item>
-    </el-descriptions>
-    <!-- 设置命令的抽屉页面 -->
-    <el-drawer
-      title="创建命令"
-      :visible.sync="drawer"
-      direction="rtl"
-      :before-close="handleClose"
-    >
-      <el-form label-position="right" label-width="80px">
-        <el-form-item label="鱼缸编号">
-          <el-input-number
-            v-model="nodeId"
-            controls-position="right"
-            size="mini"
-            :step="1"
-            :min="0"
-            :max="99"
-          ></el-input-number>
-        </el-form-item>
-        <el-form-item label="温度/°C">
-          <el-input-number
-            v-model="temperature"
-            controls-position="right"
-            size="mini"
-            :step="1"
-            :min="10"
-            :max="40"
-          ></el-input-number>
-        </el-form-item>
-        <el-form-item label="灯光">
-          <el-radio-group v-model="light">
-            <el-radio label="N">关闭</el-radio>
-            <el-radio label="Y">开启</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="除菌器">
-          <el-radio-group v-model="degerming">
-            <el-radio label="N">关闭</el-radio>
-            <el-radio label="Y">开启</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-button type="primary" round style="margin: 10px" @click="commit()"
-          >commit</el-button
+    <!-- 不知道为什么直接写 css 总是无效... -->
+    <div class="header">
+      <div class="items">
+        <!-- 日期选择器 -->
+        <el-date-picker
+          v-model="queryTime"
+          type="daterange"
+          range-separator="~"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :clearable="clearable"
+          value-format="yyyy-MM-dd"
         >
-      </el-form>
-    </el-drawer>
+        </el-date-picker>
+        <!-- 鱼缸选择下拉框 -->
+        <el-dropdown
+          trigger="click"
+          split-button
+          @command="
+            (command) => {
+              handleCommand(command);
+            }
+          "
+        >
+          <span class="el-dropdown-link"> {{ dropdownItemName }} </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item
+              v-for="node in nodes"
+              :key="node.id"
+              :command="node"
+            >
+              {{ node.name }}
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <i class="el-icon-close" @click="clear" style="margin-left: 10px" />
+      </div>
+      <div class="items">
+        <i class="el-icon-sort" @click="sort" />
+        <el-button icon="el-icon-search" class="search-btn" @click="search" />
+      </div>
+    </div>
+    <el-table
+      :data="tableData"
+      border
+      style="width: 100%"
+      :header-cell-style="columnStyle"
+      :cell-style="columnStyle"
+    >
+      <el-table-column label="序号" width="80">
+        <template slot-scope="scope">
+          {{ scope.$index + 1 }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="nodeName" label="鱼缸节点" width="150" />
+      <el-table-column label="命令内容" width="720">
+        <el-table-column prop="commandObjText" label="控制对象" width="90" />
+        <el-table-column prop="createTime" label="命令下达时间" width="180" />
+        <el-table-column prop="commandText" label="控制命令" width="180" />
+        <el-table-column prop="statusText" label="执行状态" width="100" />
+        <el-table-column prop="executeTime" label="执行时间" width="180" />
+        <!-- <el-table-column prop="heaterStatus" label="加热器" width="90" /> -->
+        <el-table-column label="操作" prop="id">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              type="danger"
+              @click="remove(scope.row.id)"
+              icon="el-icon-delete"
+            >
+              删除
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table-column>
+    </el-table>
+    <div class="paging">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="request.page"
+        :page-sizes="[10, 20, 50, 100]"
+        :page-size="request.pageSize"
+        layout="total, sizes, prev, pager, next, jumper, ->"
+        hide-on-single-page
+        :total="count"
+      >
+      </el-pagination>
+    </div>
   </div>
 </template>
 
 <script>
-/**控制命令格式为“KxxddssB”，
- * “K”为数据包开始标志，
- * “xx”为鱼缸编号，范围为“00-99”，
- * “dd”为设置的温度目标值，
- * “ss”分别代表要求灯光和除菌器开启或者关闭，“s”取值为”Y”表示开启，取值为“N”表示关闭，
- * 字母“B”为数据包结束标志和表示控制命令来自web程序。
- * */
-import { getCommandRecord, removeCommand, saveCommand } from "@/api/command";
-import { setNodeId } from "@/utils/value";
+import { pageCommands, removeCommand } from "@/api/command";
+import { listFishNode } from "@/api/fish";
 export default {
   data() {
     return {
-      drawer: false,
+      clearable: false,
+      nodes: [],
+      tableData: [],
+      queryTime: null,
+      count: 0,
+      totalPage: 0,
+      dropdownItemName: "鱼缸选择",
       columnStyle: {
         textAlign: "center",
       },
-      command: {},
-      tagType: null,
-      nodeId: null,
-      temperature: 15,
-      light: "N",
-      degerming: "N",
+      request: {
+        startTime: null,
+        endTime: null,
+        page: 1,
+        pageSize: 10,
+        nodeId: null,
+        orderType: 1,
+      },
     };
   },
   methods: {
-    commit() {
-      let command =
-        "K" +
-        setNodeId(this.nodeId) +
-        this.temperature +
-        this.light +
-        this.degerming +
-        "B";
-      const body = { command: command };
-      const res = this.commitCommand(body);
-      res
-        .then(() => {
-          this.$message({
-            type: "success",
-            message: "创建命令成功!",
-          });
-          this.drawer = false;
-          this.getRecord();
-          setTimeout(() => {
-            this.getRecord();
-          }, 5000);
-        })
-        .catch((res) => {
-          this.$message(res.message);
-        });
+    handleCommand(node) {
+      this.request.nodeId = node.id;
+      this.dropdownItemName = node.name;
+      this.pageRecord(this.request);
     },
-    commitCommand(command) {
-      return saveCommand(command);
+    // 清除查询请求的参数
+    clear() {
+      this.request.nodeId = null;
+      this.dropdownItemName = "鱼缸选择";
+      this.pageRecord(this.request);
+      this.queryTime = null;
     },
-    handleClose(done) {
-      this.$confirm("确认关闭？")
-        .then((_) => {
-          done();
-        })
-        .catch((_) => {});
+    search() {
+      if (this.queryTime !== null) {
+        // 开始时间
+        const startTime = this.queryTime[0];
+        if (startTime !== null) {
+          this.request.startTime = startTime;
+        }
+        // 结束时间
+        const endTime = this.queryTime[1];
+        if (endTime !== null) {
+          this.request.endTime = endTime;
+        }
+      }
+      this.pageRecord(this.request);
+    },
+    sort() {
+      let orderType = this.request.orderType;
+      orderType === 1
+        ? (this.request.orderType = 2)
+        : (this.request.orderType = 1);
+      this.pageRecord(this.request);
+    },
+    handleSizeChange(size) {
+      this.request.pageSize = size;
+      this.pageRecord(this.request);
+    },
+    handleCurrentChange(page) {
+      this.request.page = page;
+      this.pageRecord(this.request);
     },
     remove(recordId) {
       this.$confirm("确定删除该条记录?", "提示", {
@@ -176,7 +168,7 @@ export default {
         type: "warning",
       }).then(() => {
         removeCommand(recordId).then((res) => {
-          this.getRecord();
+          this.pageRecord(this.request);
           this.$message({
             type: "success",
             message: res.message,
@@ -184,25 +176,58 @@ export default {
         });
       });
     },
-    getRecord() {
-      getCommandRecord().then((res) => {
-        this.command = res.result;
-        this.tagType = res.result.tagType;
+    pageRecord(request) {
+      pageCommands(request).then((res) => {
+        const page = res.result;
+        this.tableData = page.records;
+        this.count = page.count;
+        this.totalPage = page.totalPage;
       });
     },
   },
   created() {
-    this.getRecord();
+    // 查询 table 信息
+    this.pageRecord(this.request);
+    // 获取鱼缸节点下拉框列表
+    listFishNode().then((res) => {
+      this.nodes = res.result;
+    });
   },
 };
 </script>
 
 <style scoped>
+el-input {
+  width: 50px;
+}
+.search-btn {
+  border-style: none;
+  float: right;
+}
+.items {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  align-items: center;
+}
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.paging {
+  display: flex;
+  flex-direction: row;
+  float: right;
+  align-items: center;
+}
+.el-dropdown-link {
+  cursor: pointer;
+  color: #409eff;
+}
 .el-icon-arrow-down {
   font-size: 12px;
-}
-.el-descriptions-item {
-  text-align: center;
 }
 .demonstration {
   display: block;

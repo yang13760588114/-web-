@@ -7,6 +7,14 @@ export function getCommandRecord() {
   });
 }
 
+export function pageCommands(commandRequest) {
+  return request({
+    url: "/command/page",
+    method: "post",
+    data: commandRequest,
+  });
+}
+
 export function getCommand(id) {
   return request({
     url: `/command/get/${id}`,
