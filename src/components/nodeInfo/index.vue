@@ -8,7 +8,7 @@
       <el-container>
         <!-- 左边 -->
         <el-aside width="250px" class="aside">
-          <div>实时水温: {{ latestTemperature }} °C</div>
+          <div>实时水温: {{ latestTemperature }}</div>
           <div>
             加热器状态: <el-tag :type="type" size="mini">{{ heater }}</el-tag>
           </div>
@@ -27,7 +27,7 @@
               @change="changeHeaterStatus"
             />
           </div>
-          <div>温度范围: {{ value[0] }} ~ {{ value[1] }}°C</div>
+          <div>水温范围: {{ range }}</div>
           <div>
             除菌器
             <el-switch
@@ -58,8 +58,8 @@
         v-model="value"
         range
         :marks="marks"
-        :min="5"
-        :max="40"
+        :min="15"
+        :max="30"
         :format-tooltip="formatTooltip"
       />
       <div slot="footer" class="dialog-footer">
@@ -74,7 +74,7 @@
 
 <script>
 import { realTimeRecords } from "@/api/record";
-import { getLimit, saveOrUpdateLimit, updateStatus } from "@/api/limit";
+import { saveOrUpdateLimit, updateStatus } from "@/api/limit";
 import { getCommand } from "@/api/command";
 
 export default {
@@ -86,16 +86,18 @@ export default {
     return {
       type: "info",
       // 滑块数据
-      value: [20, 25],
+      value: [18, 25],
       marks: {
-        14: "14°C",
+        15: "15°C",
         25: "25°C",
-        37: "37°C",
+        28: "28°C",
       },
-      heaterStatus: 0,
-      degermingStatus: 0,
-      recordDate: null,
-      lightStatus: 0,
+      heaterStatus: false,
+      range: null,
+      degermingStatus: false,
+      lightStatus: false,
+      recordDate: "未获取",
+      heater: "未获取",
       setLimit: false,
       setLimitRequest: {
         nodeId: this.node.id,
@@ -141,7 +143,6 @@ export default {
         ],
       },
       // 加热器显示状态
-      heater: "关闭",
       latestTemperature: null,
       timer: null,
     };
@@ -150,24 +151,13 @@ export default {
     formatTooltip(val) {
       return val;
     },
-    // 获取鱼缸各值的状态
-    getLimit(nodeId) {
-      getLimit(nodeId).then((res) => {
-        this.value[0] = res.result.temperatureLowerLimit;
-        this.value[1] = res.result.temperatureUpperLimit;
-        this.heaterStatus = res.result.heater;
-        this.degermingStatus = res.result.degerming;
-        this.lightStatus = res.result.light;
-      });
-    },
     saveOrUpdateLimit(value) {
       const setLimitRequest = {
         nodeId: this.node.id,
-        temperatureUpperLimit: value[1],
         temperatureLowerLimit: value[0],
+        temperatureUpperLimit: value[1],
       };
       saveOrUpdateLimit(setLimitRequest).then((res) => {
-        this.getLimit(this.node.id);
         const val = res.result;
         setTimeout(() => {
           getCommand(val).then((res) => {
@@ -200,8 +190,17 @@ export default {
             this.type = "info";
           }
           // 最新温度
-          this.latestTemperature = res.result.temperature;
-          this.recordDate = res.result.recordDate;
+          const latestRecord = res.result.record;
+          if (latestRecord !== null) {
+            this.latestTemperature = latestRecord.temperature;
+            this.recordDate = latestRecord.recordTime;
+            this.heaterStatus = latestRecord.heaterStatus;
+            this.degermingStatus = latestRecord.degermingStatus;
+            this.recordDate = latestRecord.recordTime;
+            this.lightStatus = latestRecord.lightStatus;
+            this.range = latestRecord.temperatureRange;
+          }
+          this.heater = res.result.heaterStatusText;
           this.orgOptions.xAxis.data = res.result.dates;
           this.orgOptions.series[0].data = res.result.temperatures;
         })
@@ -250,7 +249,7 @@ export default {
               });
             }
           });
-        }, 5000);
+        }, 6000);
       });
     },
     // 加热器滑块事件
@@ -267,12 +266,10 @@ export default {
     },
   },
   created() {
-    this.getLimit(this.node.id);
     this.showRealTimeRecords();
     this.timer = setInterval(() => {
       this.showRealTimeRecords();
     }, 3000);
-    this.getLimit(this.node.id);
   },
   beforeDestroy() {
     // 删除定时器
