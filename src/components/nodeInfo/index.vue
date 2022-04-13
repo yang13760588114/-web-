@@ -6,19 +6,20 @@
         {{ node.name }}-{{ node.location }}-{{ node.description }}
       </el-header>
       <el-container>
+        <!-- 左边 -->
         <el-aside width="250px" class="aside">
-          <div>实时温度: {{ latestTemperature }} °C</div>
-          <div>温度范围: {{ value[0] / 10 }}°C ~ {{ value[1] / 10 }}°C</div>
+          <div>实时水温: {{ latestTemperature }} °C</div>
           <div>
             加热器状态: <el-tag :type="type" size="mini">{{ heater }}</el-tag>
           </div>
+          <div>获取时间: {{ recordDate }}</div>
         </el-aside>
         <el-main>
           <chart :options="orgOptions" :auto-resize="true" />
         </el-main>
         <el-aside width="250px" class="aside">
           <div>
-            自动加热
+            自动加热:
             <el-switch
               v-model="heaterStatus"
               active-text="开"
@@ -26,6 +27,7 @@
               @change="changeHeaterStatus"
             />
           </div>
+          <div>温度范围: {{ value[0] }} ~ {{ value[1] }}°C</div>
           <div>
             除菌器
             <el-switch
@@ -36,7 +38,7 @@
             />
           </div>
           <div>
-            灯光
+            灯光:
             <el-switch
               v-model="lightStatus"
               active-text="开"
@@ -45,19 +47,19 @@
             />
           </div>
           <el-button type="warning" @click="setLimit = true">
-            设置温度
+            设置水温范围
           </el-button>
         </el-aside>
       </el-container>
     </el-container>
     <!-- 设置温度上下限的弹窗 -->
-    <el-dialog title="收货地址" :visible.sync="setLimit">
+    <el-dialog title="设置水温范围" :visible.sync="setLimit">
       <el-slider
         v-model="value"
         range
         :marks="marks"
-        :min="50"
-        :max="400"
+        :min="5"
+        :max="40"
         :format-tooltip="formatTooltip"
       />
       <div slot="footer" class="dialog-footer">
@@ -84,14 +86,15 @@ export default {
     return {
       type: "info",
       // 滑块数据
-      value: [200, 250],
+      value: [20, 25],
       marks: {
-        140: "14°C",
-        250: "25°C",
-        370: "37°C",
+        14: "14°C",
+        25: "25°C",
+        37: "37°C",
       },
       heaterStatus: 0,
       degermingStatus: 0,
+      recordDate: null,
       lightStatus: 0,
       setLimit: false,
       setLimitRequest: {
@@ -109,7 +112,7 @@ export default {
           data: [],
         },
         yAxis: {
-          name: "温度",
+          name: "水温",
           type: "value",
         },
         visualMap: [
@@ -145,13 +148,13 @@ export default {
   },
   methods: {
     formatTooltip(val) {
-      return val / 10;
+      return val;
     },
     // 获取鱼缸各值的状态
     getLimit(nodeId) {
       getLimit(nodeId).then((res) => {
-        this.value[0] = res.result.temperatureLowerLimit * 10;
-        this.value[1] = res.result.temperatureUpperLimit * 10;
+        this.value[0] = res.result.temperatureLowerLimit;
+        this.value[1] = res.result.temperatureUpperLimit;
         this.heaterStatus = res.result.heater;
         this.degermingStatus = res.result.degerming;
         this.lightStatus = res.result.light;
@@ -160,8 +163,8 @@ export default {
     saveOrUpdateLimit(value) {
       const setLimitRequest = {
         nodeId: this.node.id,
-        temperatureUpperLimit: value[1] / 10,
-        temperatureLowerLimit: value[0] / 10,
+        temperatureUpperLimit: value[1],
+        temperatureLowerLimit: value[0],
       };
       saveOrUpdateLimit(setLimitRequest).then((res) => {
         this.getLimit(this.node.id);
@@ -198,6 +201,7 @@ export default {
           }
           // 最新温度
           this.latestTemperature = res.result.temperature;
+          this.recordDate = res.result.recordDate;
           this.orgOptions.xAxis.data = res.result.dates;
           this.orgOptions.series[0].data = res.result.temperatures;
         })
@@ -246,7 +250,7 @@ export default {
               });
             }
           });
-        }, 6000);
+        }, 5000);
       });
     },
     // 加热器滑块事件
