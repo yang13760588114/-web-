@@ -49,17 +49,13 @@
       :header-cell-style="columnStyle"
       :cell-style="columnStyle"
     >
-      <el-table-column label="序号" width="80">
-        <template slot-scope="scope">
-          {{ scope.$index + 1 }}
-        </template>
-      </el-table-column>
+      <el-table-column label="记录编号" width="80" prop="id" />
       <el-table-column prop="nodeName" label="鱼缸节点" width="150" />
       <el-table-column label="监测数据" width="720">
         <el-table-column prop="recordTime" label="时间" width="180" />
-        <el-table-column prop="temperature" label="温度/°C" width="90" />
-        <el-table-column prop="upperLimit" label="温度上限/°C" width="100" />
-        <el-table-column prop="lowerLimit" label="温度下限/°C" width="100" />
+        <el-table-column prop="temperature" label="水温/°C" width="90" />
+        <el-table-column prop="upperLimit" label="水温上限/°C" width="100" />
+        <el-table-column prop="lowerLimit" label="水温下限/°C" width="100" />
         <el-table-column prop="heaterAutoStatus" label="自动加热" width="90" />
         <el-table-column prop="degermingStatus" label="除菌器" width="90" />
         <el-table-column prop="lightStatus" label="灯光" width="90" />
