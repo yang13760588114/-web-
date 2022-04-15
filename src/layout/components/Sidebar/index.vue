@@ -10,7 +10,7 @@
         :unique-opened="false"
         :active-text-color="variables.menuActiveText"
         :collapse-transition="false"
-        :default-openeds="['/user', '/history']"
+        :default-openeds="['/user', '/log']"
         mode="vertical"
       >
         <sidebar-item

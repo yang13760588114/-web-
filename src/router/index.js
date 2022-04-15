@@ -50,7 +50,7 @@ export const constantRoutes = [
         name: "NodeInfo",
         component: () => import("@/views/fish/fishNode/index"),
         meta: {
-          title: "鱼缸信息",
+          title: "鱼缸节点信息管理",
           icon: "线性鱼缸",
           noCache: true,
         },
@@ -60,19 +60,38 @@ export const constantRoutes = [
   {
     path: "/history",
     component: Layout,
-    meta: { title: "历史记录", icon: "el-icon-data-line" },
+    meta: { title: "历史记录查询", icon: "el-icon-data-line" },
     children: [
       {
         path: "/history/records",
         name: "HistoryRecords",
         component: () => import("@/views/record/history/index"),
-        meta: { title: "监测记录", icon: "el-icon-view", noCache: true },
+        meta: { title: "历史记录查询", icon: "el-icon-view", noCache: true },
       },
+    ],
+  },
+  {
+    path: "/log",
+    component: Layout,
+    meta: { title: "控制日志查询", icon: "el-icon-data-line" },
+    children: [
       {
-        path: "/history/commands",
+        path: "/log/web",
         name: "HistoryCommands",
         component: () => import("@/views/command/index"),
-        meta: { title: "控制日志", icon: "el-icon-receiving", noCache: true },
+        meta: {
+          title: "Web程序控制日志",
+          icon: "el-icon-receiving",
+        },
+      },
+      {
+        path: "/log/host",
+        name: "HistoryCommands",
+        component: () => import("@/views/command/index"),
+        meta: {
+          title: "上位机程序控制日志",
+          icon: "el-icon-receiving",
+        },
       },
     ],
   },
@@ -85,7 +104,7 @@ export const constantRoutes = [
         path: "user",
         name: "User",
         component: () => import("@/views/user/userInfo/index"),
-        meta: { title: "用户信息", icon: "el-icon-s-custom" },
+        meta: { title: "个人信息管理", icon: "el-icon-s-custom" },
         noCache: true,
       },
     ],
