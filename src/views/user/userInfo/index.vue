@@ -40,14 +40,18 @@ export default {
     fillZero(num) {
       return num < 10 ? "0" + num : num;
     },
-  },
-  created() {
-    this.mountUserInfo();
-    setInterval(() => {
+    setTime() {
       let date = new Date();
       this.second = this.fillZero(date.getSeconds());
       this.minute = this.fillZero(date.getMinutes());
       this.hour = this.fillZero(date.getHours());
+    },
+  },
+  created() {
+    this.mountUserInfo();
+    this.setTime();
+    setInterval(() => {
+      this.setTime();
     }, 1000);
   },
 };
