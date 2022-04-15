@@ -49,19 +49,13 @@
       :header-cell-style="columnStyle"
       :cell-style="columnStyle"
     >
-      <el-table-column label="序号" width="80">
-        <template slot-scope="scope">
-          {{ scope.$index + 1 }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="nodeName" label="鱼缸节点" width="150" />
+      <el-table-column label="记录编号" width="100" prop="id" />
+      <el-table-column prop="nodeName" label="鱼缸节点" width="180" />
       <el-table-column label="命令内容" width="720">
-        <el-table-column prop="commandObjText" label="控制对象" width="90" />
-        <el-table-column prop="createTime" label="命令下达时间" width="180" />
-        <el-table-column prop="commandText" label="控制命令" width="180" />
-        <el-table-column prop="statusText" label="执行状态" width="100" />
-        <el-table-column prop="executeTime" label="执行时间" width="180" />
-        <!-- <el-table-column prop="heaterStatus" label="加热器" width="90" /> -->
+        <el-table-column prop="commandObjText" label="控制对象" width="150" />
+        <el-table-column prop="createTime" label="命令下达时间" width="240" />
+        <el-table-column prop="commandText" label="控制命令" width="240" />
+        <el-table-column prop="statusText" label="执行状态" width="120" />
         <el-table-column label="操作" prop="id">
           <template slot-scope="scope">
             <el-button
