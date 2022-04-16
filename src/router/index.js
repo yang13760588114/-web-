@@ -91,7 +91,7 @@ export const constantRoutes = [
       {
         path: "/log/host",
         name: "HistoryCommands",
-        component: () => import("@/views/command/index"),
+        component: () => import("@/views/commandHost/index"),
         meta: {
           title: "上位机程序控制日志",
           icon: "el-icon-receiving",

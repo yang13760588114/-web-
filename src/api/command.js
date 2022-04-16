@@ -15,6 +15,14 @@ export function pageCommands(commandRequest) {
   });
 }
 
+export function pageHostCommands(commandRequest) {
+  return request({
+    url: "/command/host/page",
+    method: "post",
+    data: commandRequest,
+  });
+}
+
 export function getCommand(id) {
   return request({
     url: `/command/get/${id}`,
@@ -25,6 +33,13 @@ export function getCommand(id) {
 export function removeCommand(recordId) {
   return request({
     url: `/command/remove/${recordId}`,
+    method: "delete",
+  });
+}
+
+export function removeHostCommand(recordId) {
+  return request({
+    url: `/command/host/remove/${recordId}`,
     method: "delete",
   });
 }
