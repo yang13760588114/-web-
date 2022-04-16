@@ -29,7 +29,7 @@ export default {
   },
   data() {
     return {
-      title: "智能鱼缸系统",
+      title: "智能商用鱼缸远程监测和控制软件",
       logo: "https://qr-store-image.oss-cn-guangzhou.aliyuncs.com/img/鱼缸.png",
     };
   },

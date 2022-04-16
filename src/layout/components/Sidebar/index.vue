@@ -19,6 +19,7 @@
           :item="route"
           :base-path="route.path"
         />
+        <sidebar-item :item="exit" @click="logout" />
       </el-menu>
     </el-scrollbar>
   </div>
@@ -26,11 +27,23 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { logout } from "@/api/user";
 import Logo from "./Logo";
 import SidebarItem from "./SidebarItem";
 import variables from "@/styles/variables.scss";
 
 export default {
+  data() {
+    return {
+      exit: {
+        meta: {
+          title: "退出",
+          icon: "el-icon-position",
+        },
+        path: "/login",
+      },
+    };
+  },
   components: { SidebarItem, Logo },
   computed: {
     ...mapGetters(["sidebar"]),
@@ -54,6 +67,12 @@ export default {
     },
     isCollapse() {
       return !this.sidebar.opened;
+    },
+  },
+  methods: {
+    logout() {
+      console.log("测试");
+      logout();
     },
   },
 };

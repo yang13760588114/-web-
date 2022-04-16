@@ -66,7 +66,11 @@ export const constantRoutes = [
         path: "/history/records",
         name: "HistoryRecords",
         component: () => import("@/views/record/history/index"),
-        meta: { title: "历史记录查询", icon: "el-icon-view", noCache: true },
+        meta: {
+          title: "历史记录查询",
+          icon: "el-icon-collection",
+          noCache: true,
+        },
       },
     ],
   },
