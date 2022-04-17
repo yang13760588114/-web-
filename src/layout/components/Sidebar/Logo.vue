@@ -29,7 +29,7 @@ export default {
   },
   data() {
     return {
-      title: "商用智能鱼缸",
+      title: "智能商用鱼缸",
       logo: "https://qr-store-image.oss-cn-guangzhou.aliyuncs.com/img/鱼缸.png",
     };
   },
