@@ -25,7 +25,6 @@ export const constantRoutes = [
     path: "/",
     component: Layout,
     redirect: "/real-time-record",
-    meta: { title: "记录数据", icon: "el-icon-data-line" },
     children: [
       {
         path: "/real-time-record",
@@ -43,7 +42,6 @@ export const constantRoutes = [
     path: "/node",
     component: Layout,
     redirect: "/node",
-    meta: { title: "记录数据", icon: "el-icon-data-line" },
     children: [
       {
         path: "/node/info",
@@ -60,7 +58,6 @@ export const constantRoutes = [
   {
     path: "/history",
     component: Layout,
-    meta: { title: "历史记录查询", icon: "el-icon-data-line" },
     children: [
       {
         path: "/history/records",
@@ -102,7 +99,6 @@ export const constantRoutes = [
   {
     path: "/user",
     component: Layout,
-    meta: { title: "用户管理", icon: "el-icon-user" },
     children: [
       {
         path: "user",
