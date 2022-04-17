@@ -29,7 +29,7 @@
           </div>
           <div>水温范围: {{ range }}</div>
           <div>
-            除菌器
+            除菌器:
             <el-switch
               v-model="degermingStatus"
               active-text="开"
