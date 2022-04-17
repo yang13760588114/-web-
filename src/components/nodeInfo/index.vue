@@ -76,7 +76,6 @@
 import { realTimeRecords, latestTimeRecord } from "@/api/record";
 import { saveOrUpdateLimit, updateStatus } from "@/api/limit";
 import { getCommand } from "@/api/command";
-import { setBooleanValue } from "@/utils/value";
 
 export default {
   name: "nodeInfo",
