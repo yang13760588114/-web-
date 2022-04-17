@@ -29,7 +29,7 @@ export default {
   },
   data() {
     return {
-      title: "智能商用鱼缸远程监测和控制软件",
+      title: "商用智能鱼缸",
       logo: "https://qr-store-image.oss-cn-guangzhou.aliyuncs.com/img/鱼缸.png",
     };
   },
@@ -69,10 +69,10 @@ export default {
     & .sidebar-title {
       display: inline-block;
       margin: 0;
-      color: #fff;
+      color: rgb(88, 150, 243);
       font-weight: 600;
       line-height: 50px;
-      font-size: 14px;
+      font-size: 18px;
       font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
       vertical-align: middle;
     }

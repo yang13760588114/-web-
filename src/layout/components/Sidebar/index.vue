@@ -59,7 +59,7 @@ export default {
       return path;
     },
     showLogo() {
-      return this.$store.state.settings.sidebarLogo;
+      return true;
     },
     variables() {
       return variables;
@@ -70,7 +70,6 @@ export default {
   },
   methods: {
     logout() {
-      console.log("测试");
       logout();
     },
   },
