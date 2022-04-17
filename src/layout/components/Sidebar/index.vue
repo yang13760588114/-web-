@@ -18,7 +18,7 @@
           :item="route"
           :base-path="route.path"
         />
-        <sidebar-item :item="exit" @click="logout" />
+        <sidebar-item :item="exit" @click.native="logout" />
       </el-menu>
     </el-scrollbar>
   </div>
@@ -69,8 +69,9 @@ export default {
     },
   },
   methods: {
-    logout() {
-      logout();
+    async logout() {
+      await this.$store.dispatch("user/logout");
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
     },
   },
 };
