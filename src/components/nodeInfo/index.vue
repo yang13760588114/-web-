@@ -73,9 +73,10 @@
 </template>
 
 <script>
-import { realTimeRecords } from "@/api/record";
+import { realTimeRecords, latestTimeRecord } from "@/api/record";
 import { saveOrUpdateLimit, updateStatus } from "@/api/limit";
 import { getCommand } from "@/api/command";
+import { setBooleanValue } from "@/utils/value";
 
 export default {
   name: "nodeInfo",
@@ -192,12 +193,9 @@ export default {
           // 最新温度
           const latestRecord = res.result.record;
           if (latestRecord !== null) {
+            this.recordDate = latestRecord.recordTime;
             this.latestTemperature = latestRecord.temperature;
             this.recordDate = latestRecord.recordTime;
-            this.heaterStatus = latestRecord.heaterStatus;
-            this.degermingStatus = latestRecord.degermingStatus;
-            this.recordDate = latestRecord.recordTime;
-            this.lightStatus = latestRecord.lightStatus;
             this.range = latestRecord.temperatureRange;
           }
           this.heater = res.result.heaterStatusText;
@@ -232,24 +230,14 @@ export default {
               });
             } else {
               // 重制状态
-              switch (obj) {
-                case "J":
-                  this.heaterStatus = 0;
-                  break;
-                case "D":
-                  this.lightStatus = 0;
-                  break;
-                case "C":
-                  this.degermingStatus = 0;
-                  break;
-              }
+              this.getLatestRecord();
               this.$message({
                 type: "error",
                 message: "控制命令执行失败，请重新执行",
               });
             }
           });
-        }, 6000);
+        }, 4000);
       });
     },
     // 加热器滑块事件
@@ -264,8 +252,16 @@ export default {
     changeDegermingStatus(val) {
       this.changeNodeStatus("C", val);
     },
+    getLatestRecord() {
+      latestTimeRecord(this.node.id).then((res) => {
+        this.lightStatus = res.result.lightStatus;
+        this.heaterStatus = res.result.heaterStatus;
+        this.degermingStatus = res.result.degermingStatus;
+      });
+    },
   },
   created() {
+    this.getLatestRecord();
     this.showRealTimeRecords();
     this.timer = setInterval(() => {
       this.showRealTimeRecords();

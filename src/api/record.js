@@ -8,6 +8,14 @@ export function realTimeRecords(nodeId) {
   });
 }
 
+export function latestTimeRecord(nodeId) {
+  return request({
+    url: `/record/latest`,
+    params: { nodeId },
+    method: "get",
+  });
+}
+
 export function pageHistoryRecords(pageRequest) {
   return request({
     url: "/record/page",
