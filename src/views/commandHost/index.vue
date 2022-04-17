@@ -108,7 +108,7 @@ export default {
         page: 1,
         pageSize: 10,
         nodeId: null,
-        orderType: 1,
+        orderType: 2,
       },
     };
   },
