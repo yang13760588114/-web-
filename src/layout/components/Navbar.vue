@@ -11,7 +11,10 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar + '?imageView2/1/w/80/h/80'" class="user-avatar" />
+          <img
+            src="https://qr-store-image.oss-cn-guangzhou.aliyuncs.com/img/20211218134342.png"
+            class="user-avatar"
+          />
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
