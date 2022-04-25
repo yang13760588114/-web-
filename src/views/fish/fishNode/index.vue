@@ -74,7 +74,7 @@
       </el-descriptions>
     </div>
     <!-- 添加鱼缸节点的弹窗 -->
-    <el-dialog title="收货地址" :visible.sync="createFishNode">
+    <el-dialog title="新增鱼缸节点信息" :visible.sync="createFishNode">
       <el-form :model="newNode">
         <el-form-item label="鱼缸节点名称">
           <el-input v-model="newNode.name" autocomplete="off"></el-input>
