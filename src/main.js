@@ -25,6 +25,7 @@ Vue.config.productionTip = false;
 // 注册全局组件 chart
 import ECharts from "vue-echarts";
 import "echarts/lib/chart/line";
+import "echarts/lib/component/tooltip";
 Vue.component("chart", ECharts);
 
 Vue.use(ElementUI, { locale });
