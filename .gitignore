@@ -7,6 +7,9 @@ yarn-error.log*
 package-lock.json
 tests/**/coverage/
 
+.env.*
+!.env.template
+
 # Editor directories and files
 .idea
 .vscode
