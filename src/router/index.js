@@ -78,7 +78,7 @@ export const constantRoutes = [
     children: [
       {
         path: "/log/web",
-        name: "HistoryCommands",
+        name: "WebCommandLog",
         component: () => import("@/views/command/index"),
         meta: {
           title: "Web程序控制日志",
@@ -87,7 +87,7 @@ export const constantRoutes = [
       },
       {
         path: "/log/host",
-        name: "HistoryCommands",
+        name: "HostCommandLog",
         component: () => import("@/views/commandHost/index"),
         meta: {
           title: "上位机程序控制日志",

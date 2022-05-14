@@ -32,6 +32,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { clearCookies } from "@/utils/auth";
 import Breadcrumb from "@/components/Breadcrumb";
 import Hamburger from "@/components/Hamburger";
 
@@ -48,6 +49,7 @@ export default {
       this.$store.dispatch("app/toggleSideBar");
     },
     async logout() {
+      clearCookies();
       await this.$store.dispatch("user/logout");
       this.$router.push(`/login?redirect=${this.$route.fullPath}`);
     },

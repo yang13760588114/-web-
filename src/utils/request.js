@@ -37,12 +37,20 @@ service.interceptors.response.use(
     const res = response.data;
     // 只有 code == 200 是正确的, 其他都是错误的
     if (res.code !== 200) {
-      Message({
-        message: res.message || error,
-        type: "error",
-        duration: 1000,
-      });
-      return Promise.reject(new Error(res.message || error));
+      if (res.code == 10006) {
+        Message({
+          message: "身份验证时失败，请重新登录!",
+          type: "error",
+          duration: 1000,
+        });
+      } else {
+        Message({
+          message: res.message || error,
+          type: "error",
+          duration: 1000,
+        });
+        return Promise.reject(new Error(res.message || error));
+      }
     } else {
       return res;
     }
