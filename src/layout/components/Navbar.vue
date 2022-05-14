@@ -33,6 +33,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { clearCookies } from "@/utils/auth";
+import { logout } from "@/api/user";
 import Breadcrumb from "@/components/Breadcrumb";
 import Hamburger from "@/components/Hamburger";
 
@@ -48,9 +49,10 @@ export default {
     toggleSideBar() {
       this.$store.dispatch("app/toggleSideBar");
     },
-    async logout() {
-      clearCookies();
-      await this.$store.dispatch("user/logout");
+    logout() {
+      logout(); // 清除 redis 中的 token
+      clearCookies(); // 清空 cookies
+      // await this.$store.dispatch("user/logout");
       this.$router.push(`/login?redirect=${this.$route.fullPath}`);
     },
   },

@@ -1,6 +1,5 @@
 import axios from "axios";
 import { Message } from "element-ui";
-import store from "@/store";
 import { getToken } from "@/utils/auth";
 
 // create an axios instance
@@ -21,9 +20,8 @@ const error = "发生错误!";
 // request interceptor
 service.interceptors.request.use(
   (config) => {
-    if (store.getters.token) {
-      config.headers["X-Access-Token"] = getToken();
-    }
+    // if (store.getters.token) {} 暂时不懂
+    config.headers["X-Access-Token"] = getToken();
     return config;
   },
   (error) => {
@@ -38,11 +36,7 @@ service.interceptors.response.use(
     // 只有 code == 200 是正确的, 其他都是错误的
     if (res.code !== 200) {
       if (res.code == 10006) {
-        Message({
-          message: "身份验证时失败，请重新登录!",
-          type: "error",
-          duration: 1000,
-        });
+        this.$message.error("身份校验失败，请重新登录");
       } else {
         Message({
           message: res.message || error,
