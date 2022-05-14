@@ -123,7 +123,7 @@ export default {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true;
-          sleep(2500);
+          sleep(2000);
           login(this.loginForm)
             .then((res) => {
               setToken(res.result.token);
