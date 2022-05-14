@@ -201,7 +201,6 @@ export default {
           if (latestRecord !== null) {
             this.recordDate = latestRecord.recordTime;
             this.latestTemperature = latestRecord.temperature;
-            this.recordDate = latestRecord.recordTime;
             this.range = latestRecord.temperatureRange;
           }
           this.heater = res.result.heaterStatusText;

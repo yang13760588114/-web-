@@ -1,6 +1,8 @@
 import axios from "axios";
 import { Message } from "element-ui";
-import { getToken } from "@/utils/auth";
+import { MessageBox } from "element-ui";
+import { getToken, clearCookies } from "@/utils/auth";
+import router from "vue";
 
 // create an axios instance
 const service = axios.create({
@@ -35,8 +37,15 @@ service.interceptors.response.use(
     const res = response.data;
     // 只有 code == 200 是正确的, 其他都是错误的
     if (res.code !== 200) {
+      clearCookies(); // 清除 cookie
       if (res.code == 10006) {
-        this.$message.error("身份校验失败，请重新登录");
+        MessageBox.alert(response.data.message, "登录失效", {
+          confirmButtonText: "跳转登录页面",
+          callback: (action) => {
+            window.location.href = "/login";
+          },
+        });
+        return Promise.reject(new Error("登陆校验失败，请重新登录"));
       } else {
         Message({
           message: res.message || error,
@@ -50,11 +59,10 @@ service.interceptors.response.use(
     }
   },
   (error) => {
-    console.log("err" + error); // for debug
     Message({
-      message: error.message,
+      title: "警告",
+      message: "发生错误!",
       type: "error",
-      duration: 5 * 1000,
     });
     return Promise.reject(error);
   }
