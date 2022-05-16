@@ -121,6 +121,11 @@ export default {
     // 清除查询请求的参数
     clear() {
       this.request.nodeId = null;
+      this.request.startTime = null;
+      this.request.endTime = null;
+      this.request.page = 1;
+      this.request.pageSize = 10;
+      this.request.orderType = 1;
       this.dropdownItemName = "鱼缸选择";
       this.pageRecord(this.request);
       this.queryTime = null;
