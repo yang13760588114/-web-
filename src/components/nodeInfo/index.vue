@@ -73,7 +73,11 @@
 </template>
 
 <script>
-import { realTimeRecords, latestTimeRecord } from "@/api/record";
+import {
+  realTimeRecords,
+  latestTimeRecord,
+  latestNodeStatus,
+} from "@/api/record";
 import { saveOrUpdateLimit, updateStatus } from "@/api/limit";
 import { getCommand } from "@/api/command";
 
@@ -180,7 +184,7 @@ export default {
               });
             }
           });
-        }, 6000);
+        }, 5000);
       });
       this.setLimit = false;
     },
@@ -235,14 +239,14 @@ export default {
               });
             } else {
               // 重制状态
-              this.getLatestRecord();
+              this.getNodeLatestNodeStatus();
               this.$message({
                 type: "error",
                 message: "控制命令执行失败，请重新执行",
               });
             }
           });
-        }, 4000);
+        }, 5000);
       });
     },
     // 加热器滑块事件
@@ -257,16 +261,16 @@ export default {
     changeDegermingStatus(val) {
       this.changeNodeStatus("C", val);
     },
-    getLatestRecord() {
-      latestTimeRecord(this.node.id).then((res) => {
+    getNodeLatestNodeStatus() {
+      latestNodeStatus(this.node.id).then((res) => {
         this.lightStatus = res.result.lightStatus;
-        this.heaterStatus = res.result.heaterStatus;
         this.degermingStatus = res.result.degermingStatus;
+        this.heaterStatus = res.result.heaterStatus;
       });
     },
   },
   created() {
-    this.getLatestRecord();
+    this.getNodeLatestNodeStatus();
     this.showRealTimeRecords();
     this.timer = setInterval(() => {
       this.showRealTimeRecords();

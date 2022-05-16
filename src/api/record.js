@@ -16,6 +16,14 @@ export function latestTimeRecord(nodeId) {
   });
 }
 
+export function latestNodeStatus(nodeId) {
+  return request({
+    url: `/record/latest/status`,
+    params: { nodeId },
+    method: "get",
+  });
+}
+
 export function pageHistoryRecords(pageRequest) {
   return request({
     url: "/record/page",

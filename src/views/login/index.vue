@@ -20,6 +20,7 @@
           v-model="loginForm.account"
           name="account"
           type="text"
+          placeholder=""
           tabindex="1"
         />
       </el-form-item>
@@ -33,6 +34,7 @@
           v-model="loginForm.password"
           :type="passwordType"
           name="password"
+          placeholder=""
           tabindex="2"
           @keyup.enter.native="handleLogin"
         />
