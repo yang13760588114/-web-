@@ -59,7 +59,7 @@
 
 <script>
 import { login } from "@/api/user";
-import { setToken } from "@/utils/auth";
+import { setToken, setUserInfo, setUserId } from "@/utils/auth";
 import { sleep } from "@/utils/Sleep";
 export default {
   name: "Login",
@@ -127,6 +127,8 @@ export default {
           login(this.loginForm)
             .then((res) => {
               setToken(res.result.token);
+              setUserInfo(res.result.userInfo);
+              setUserId(res.result.userInfo.id);
               this.$router.push({ path: "/" });
               this.loading = false;
             })
