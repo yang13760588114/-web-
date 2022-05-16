@@ -102,7 +102,7 @@
 
 <script>
 import { updatePwd, sendCaptcha } from "@/api/user";
-import { removeToken, removeUserInfo, removeUserId } from "@/utils/auth";
+import { clearCookies } from "@/utils/auth";
 export default {
   name: "userCard",
   props: {
@@ -184,9 +184,7 @@ export default {
           type: "success",
           message: res.result,
         });
-        removeToken();
-        removeUserInfo();
-        removeUserId();
+        clearCookies();
         this.$router.push("/login");
       });
     },

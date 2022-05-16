@@ -37,8 +37,8 @@ service.interceptors.response.use(
     const res = response.data;
     // 只有 code == 200 是正确的, 其他都是错误的
     if (res.code !== 200) {
-      clearCookies(); // 清除 cookie
       if (res.code == 10006) {
+        clearCookies(); // 清除 cookie
         MessageBox.alert(response.data.message, "登录失效", {
           confirmButtonText: "跳转登录页面",
           callback: (action) => {

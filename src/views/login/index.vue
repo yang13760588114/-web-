@@ -18,7 +18,6 @@
         <el-input
           ref="account"
           v-model="loginForm.account"
-          placeholder="account(admin)"
           name="account"
           type="text"
           tabindex="1"
@@ -33,7 +32,6 @@
           ref="password"
           v-model="loginForm.password"
           :type="passwordType"
-          placeholder="Password(123456)"
           name="password"
           tabindex="2"
           @keyup.enter.native="handleLogin"
@@ -80,8 +78,8 @@ export default {
     };
     return {
       loginForm: {
-        account: "admin",
-        password: "123456",
+        account: "",
+        password: "",
       },
       loginRules: {
         account: [
