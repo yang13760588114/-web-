@@ -204,7 +204,7 @@ export default {
             this.latestTemperature = latestRecord.temperature;
             this.range = latestRecord.temperatureRange;
             this.lightStatus = latestRecord.lightStatus;
-            latestRecord.heaterAutoStatus;
+            this.heaterAutoStatus = latestRecord.heaterAutoStatus;
             this.degermingStatus = latestRecord.degermingStatus;
             this.heaterStatus = latestRecord.heaterStatus;
           }
@@ -261,13 +261,13 @@ export default {
     changeDegermingStatus(val) {
       this.changeNodeStatus("C", val);
     },
-    // getNodeLatestNodeStatus() {
-    //   latestNodeStatus(this.node.id).then((res) => {
-    //     this.lightStatus = res.result.lightStatus;
-    //     this.degermingStatus = res.result.degermingStatus;
-    //     this.heaterStatus = res.result.heaterStatus;
-    //   });
-    // },
+    getNodeLatestNodeStatus() {
+      latestNodeStatus(this.node.id).then((res) => {
+        this.lightStatus = res.result.lightStatus;
+        this.degermingStatus = res.result.degermingStatus;
+        this.heaterStatus = res.result.heaterStatus;
+      });
+    },
   },
   created() {
     // this.getNodeLatestNodeStatus();
