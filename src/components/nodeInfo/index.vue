@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { realTimeRecords } from "@/api/record";
+import { realTimeRecords, latestNodeStatus } from "@/api/record";
 import { saveOrUpdateLimit, updateStatus } from "@/api/limit";
 import { getCommand } from "@/api/command";
 
@@ -242,7 +242,7 @@ export default {
                 message: "执行成功",
               });
             } else {
-              // 重制状态
+              // 重置状态
               this.getNodeLatestNodeStatus();
               this.$message({
                 type: "error",
@@ -250,7 +250,7 @@ export default {
               });
             }
           });
-        }, 5000);
+        }, 3000);
       });
     },
     // 加热器滑块事件
@@ -278,7 +278,7 @@ export default {
     this.showRealTimeRecords();
     this.timer = setInterval(() => {
       this.showRealTimeRecords();
-    }, 5000);
+    }, 10000);
   },
   beforeDestroy() {
     // 删除定时器
