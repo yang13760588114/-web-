@@ -10,7 +10,8 @@
         <el-aside width="250px" class="aside">
           <div>实时水温: {{ latestTemperature }}</div>
           <div>
-            加热器状态: <el-tag :type="type" size="mini">{{ heater }}</el-tag>
+            加热器状态:
+            <el-tag :type="type" size="mini">{{ heaterStatus }}</el-tag>
           </div>
           <div>获取时间: {{ recordDate }}</div>
         </el-aside>
@@ -21,7 +22,7 @@
           <div>
             自动加热:
             <el-switch
-              v-model="heaterStatus"
+              v-model="heaterAutoStatus"
               active-text="开"
               inactive-text="关"
               @change="changeHeaterStatus"
@@ -92,12 +93,12 @@ export default {
         25: "25°C",
         28: "28°C",
       },
-      heaterStatus: false,
+      heaterAutoStatus: false,
       range: null,
       degermingStatus: false,
       lightStatus: false,
       recordDate: "未获取",
-      heater: "未获取",
+      heaterStatus: "未获取",
       setLimit: false,
       setLimitRequest: {
         nodeId: this.node.id,
@@ -188,25 +189,28 @@ export default {
       const record = realTimeRecords(this.node.id);
       record
         .then((res) => {
-          // 最新温度
+          // 最新的记录数据
           const latestRecord = res.result.record;
           if (latestRecord !== null) {
             // 加热器
-            const text = latestRecord.heaterStatusText;
-            console.log(text);
-            this.heater = text;
-            if (text == "开启") {
+            this.heaterStatus = latestRecord.heaterStatusText;
+            if (latestRecord.heaterStatusText == "开启") {
               this.type = "success";
             } else {
               this.type = "info";
             }
+            // 最新记录时间
             this.recordDate = latestRecord.recordTime;
+            // 最新温度
             this.latestTemperature = latestRecord.temperature;
+            // 温度范围
             this.range = latestRecord.temperatureRange;
+            // 灯光状态
             this.lightStatus = latestRecord.lightStatus;
+            // 自动加热状态
             this.heaterAutoStatus = latestRecord.heaterAutoStatus;
+            // 除菌器状态
             this.degermingStatus = latestRecord.degermingStatus;
-            this.heaterStatus = latestRecord.heaterStatus;
           }
           this.orgOptions.xAxis.data = res.result.dates;
           this.orgOptions.series[0].data = res.result.temperatures;
@@ -274,7 +278,7 @@ export default {
     this.showRealTimeRecords();
     this.timer = setInterval(() => {
       this.showRealTimeRecords();
-    }, 3000);
+    }, 5000);
   },
   beforeDestroy() {
     // 删除定时器
