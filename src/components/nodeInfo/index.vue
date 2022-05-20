@@ -73,11 +73,7 @@
 </template>
 
 <script>
-import {
-  realTimeRecords,
-  latestTimeRecord,
-  latestNodeStatus,
-} from "@/api/record";
+import { realTimeRecords } from "@/api/record";
 import { saveOrUpdateLimit, updateStatus } from "@/api/limit";
 import { getCommand } from "@/api/command";
 
@@ -192,22 +188,26 @@ export default {
       const record = realTimeRecords(this.node.id);
       record
         .then((res) => {
-          // 加热器
-          const text = res.result.heaterStatusText;
-          this.heater = text;
-          if (text == "开启") {
-            this.type = "success";
-          } else {
-            this.type = "info";
-          }
           // 最新温度
           const latestRecord = res.result.record;
           if (latestRecord !== null) {
+            // 加热器
+            const text = latestRecord.heaterStatusText;
+            console.log(text);
+            this.heater = text;
+            if (text == "开启") {
+              this.type = "success";
+            } else {
+              this.type = "info";
+            }
             this.recordDate = latestRecord.recordTime;
             this.latestTemperature = latestRecord.temperature;
             this.range = latestRecord.temperatureRange;
+            this.lightStatus = latestRecord.lightStatus;
+            latestRecord.heaterAutoStatus;
+            this.degermingStatus = latestRecord.degermingStatus;
+            this.heaterStatus = latestRecord.heaterStatus;
           }
-          this.heater = res.result.heaterStatusText;
           this.orgOptions.xAxis.data = res.result.dates;
           this.orgOptions.series[0].data = res.result.temperatures;
         })
@@ -261,16 +261,16 @@ export default {
     changeDegermingStatus(val) {
       this.changeNodeStatus("C", val);
     },
-    getNodeLatestNodeStatus() {
-      latestNodeStatus(this.node.id).then((res) => {
-        this.lightStatus = res.result.lightStatus;
-        this.degermingStatus = res.result.degermingStatus;
-        this.heaterStatus = res.result.heaterStatus;
-      });
-    },
+    // getNodeLatestNodeStatus() {
+    //   latestNodeStatus(this.node.id).then((res) => {
+    //     this.lightStatus = res.result.lightStatus;
+    //     this.degermingStatus = res.result.degermingStatus;
+    //     this.heaterStatus = res.result.heaterStatus;
+    //   });
+    // },
   },
   created() {
-    this.getNodeLatestNodeStatus();
+    // this.getNodeLatestNodeStatus();
     this.showRealTimeRecords();
     this.timer = setInterval(() => {
       this.showRealTimeRecords();
