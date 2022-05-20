@@ -175,6 +175,7 @@ export default {
                 message: "执行成功",
               });
             } else {
+              this.getNodeLatestNodeStatus();
               this.$message({
                 type: "error",
                 message: "控制命令执行失败，请重新执行",
@@ -224,6 +225,7 @@ export default {
     },
     // 封装修改状态方法
     changeNodeStatus(obj, switchStatus) {
+      this.destory();
       let status = 0;
       if (switchStatus) {
         status = 1;
@@ -233,6 +235,7 @@ export default {
         commandObj: obj,
         status: status,
       }).then((res) => {
+        this.init();
         const id = res.result;
         setTimeout(() => {
           getCommand(id).then((res) => {
@@ -265,25 +268,34 @@ export default {
     changeDegermingStatus(val) {
       this.changeNodeStatus("C", val);
     },
+    // 获取鱼缸的最新状态
     getNodeLatestNodeStatus() {
       latestNodeStatus(this.node.id).then((res) => {
         this.lightStatus = res.result.lightStatus;
         this.degermingStatus = res.result.degermingStatus;
-        this.heaterStatus = res.result.heaterStatus;
+        this.heaterAutoStatus = res.result.heaterStatus;
+        this.temperatureUpperLimit = res.result.up;
+        this.temperatureLowerLimit = res.result.low;
       });
+    },
+    //
+    init() {
+      this.showRealTimeRecords();
+      this.timer = setInterval(() => {
+        this.showRealTimeRecords();
+      }, 10000);
+    },
+    destory() {
+      // 删除定时器
+      clearInterval(this.timer);
+      this.timer = null;
     },
   },
   created() {
-    // this.getNodeLatestNodeStatus();
-    this.showRealTimeRecords();
-    this.timer = setInterval(() => {
-      this.showRealTimeRecords();
-    }, 10000);
+    this.init();
   },
   beforeDestroy() {
-    // 删除定时器
-    clearInterval(this.timer);
-    this.timer = null;
+    this.destory();
   },
 };
 </script>
