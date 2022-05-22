@@ -235,7 +235,6 @@ export default {
         commandObj: obj,
         status: status,
       }).then((res) => {
-        this.init();
         const id = res.result;
         setTimeout(() => {
           getCommand(id).then((res) => {
@@ -253,6 +252,7 @@ export default {
               });
             }
           });
+          this.init();
         }, 3000);
       });
     },
@@ -283,7 +283,7 @@ export default {
       this.showRealTimeRecords();
       this.timer = setInterval(() => {
         this.showRealTimeRecords();
-      }, 10000);
+      }, 15000);
     },
     destory() {
       // 删除定时器
